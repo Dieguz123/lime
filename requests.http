@@ -1,0 +1,18 @@
+### Crea un utente
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "Diego"
+}
+
+### Leggi l'utente con id 1
+GET http://localhost:8080/api/users/1
+
+### Prova con un nome vuoto
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": ""
+}
