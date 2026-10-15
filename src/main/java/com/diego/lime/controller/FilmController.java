@@ -18,7 +18,7 @@ public class FilmController {
         this.service = service;
     }
 
-    @GetMapping("/films")
+    @GetMapping("/api/films")
     public List<Film> response() {
         return service.returnFilms();
     }
