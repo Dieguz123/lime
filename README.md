@@ -54,3 +54,4 @@ This keeps the layers separate, and the business logic can be tested without sta
 - [ ] Swipes and match logic
 - [ ] Real movie data from the TMDB API
 - [ ] Mobile-friendly web interface
+- [ ]Authentication with Spring Security (hashed passwords)
