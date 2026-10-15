@@ -25,21 +25,21 @@ class FilmServiceTest {
     void returnFilmByIdTrovaIlFilmGiusto(){
         FilmService service = new FilmService();
 
-        Optional<Film> risultato = service.getFilmById(2);
+        Optional<Film> risultato = service.getFilmById(2L);
 
         assertTrue(risultato.isPresent());
 
         Film film = risultato.get();
 
         assertTrue(risultato.isPresent());
-        assertEquals("Inception", film.name());
+        assertEquals("Inception", film.getName());
     }
 
     @Test
     void returnFilmByIdConIdInesistenteRestituisceVuoto(){
         FilmService service = new FilmService();
 
-        Optional<Film> film = service.getFilmById(10);
+        Optional<Film> film = service.getFilmById(10L);
 
         assertTrue(film.isEmpty());
     }

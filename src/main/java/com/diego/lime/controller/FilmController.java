@@ -26,7 +26,7 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Film> getFilmById(@PathVariable int id){
+    public ResponseEntity<Film> getFilmById(@PathVariable Long id){
          return service.getFilmById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound()
