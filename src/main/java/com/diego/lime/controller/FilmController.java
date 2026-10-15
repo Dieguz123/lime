@@ -11,7 +11,7 @@ import com.diego.lime.service.FilmService;
 import java.util.List;
 
 @RestController
- @RequestMapping("/api/films")
+@RequestMapping("/api/films")
 public class FilmController {
 
     private final FilmService service;
