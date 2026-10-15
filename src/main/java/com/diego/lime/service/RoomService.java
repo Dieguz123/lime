@@ -21,7 +21,7 @@ public class RoomService {
         this.codeGenerator = codeGenerator;
     }
 
-    public Room CreateRoom(Long creatorId){
+    public Room createRoom(Long creatorId){
         User creator = findUser(creatorId);
         Room room = new Room(generateUniqueCode(), creator);
         return roomRepository.save(room);
@@ -37,8 +37,8 @@ public class RoomService {
 
         User user = findUser(userId);
 
-        if (room.getCreator().getId().equals((user.getId()))){
-            throw new IllegalStateException("Your are already in this room");
+        if (room.getCreator().getId().equals(user.getId())){
+            throw new IllegalStateException("You are already in this room");
         }
 
         room.join(user);
@@ -47,7 +47,7 @@ public class RoomService {
 
     private User findUser(Long userId){
         return userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not foudn"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     private String generateUniqueCode() {
