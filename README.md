@@ -13,6 +13,7 @@ Thanks to Lime, I will never argue with my girlfriend again about which movie to
 - Spring Boot 4
 - Gradle
 - JUnit 5
+- Spring data JPA
 
 ## Getting started
 
