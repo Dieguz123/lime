@@ -2,14 +2,16 @@ package com.diego.lime.controller;
 
 import com.diego.lime.model.Film;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.http.ResponseEntity;
 import com.diego.lime.service.FilmService;
 
-import java.util.*;
+import java.util.List;
 
 @RestController
+ @RequestMapping("/api/films")
 public class FilmController {
 
     private final FilmService service;
@@ -18,14 +20,14 @@ public class FilmController {
         this.service = service;
     }
 
-    @GetMapping("/api/films")
-    public List<Film> response() {
-        return service.returnFilms();
+    @GetMapping
+    public List<Film> getAllFilms() {
+        return service.getAllFilms();
     }
 
-    @GetMapping("/api/films/{id}")
-    public ResponseEntity<Film> returnFilm(@PathVariable int id){
-         return service.returnFilmById(id)
+    @GetMapping("/{id}")
+    public ResponseEntity<Film> getFilmById(@PathVariable int id){
+         return service.getFilmById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound()
                                         .build());

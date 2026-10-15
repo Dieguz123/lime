@@ -18,11 +18,11 @@ public class FilmService{
         films.add(new Film(3, "Il Padrino", 1972, "Netflix", "Drammatico"));
     }  
 
-    public List<Film> returnFilms(){
+    public List<Film> getAllFilms(){
         return films; 
     }
 
-    public Optional<Film> returnFilmById (int id){
+    public Optional<Film> getFilmById (int id){
         return films.stream().filter(film -> film.id() == id)
                 .findFirst();
     }

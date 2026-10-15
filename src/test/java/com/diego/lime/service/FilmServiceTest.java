@@ -16,7 +16,7 @@ class FilmServiceTest {
     void returnFilmsRestituisceTuttiIFilm(){
         FilmService service = new FilmService();
 
-        List<Film> films = service.returnFilms();
+        List<Film> films = service.getAllFilms();
 
         assertEquals(3, films.size());
     }
@@ -25,7 +25,7 @@ class FilmServiceTest {
     void returnFilmByIdTrovaIlFilmGiusto(){
         FilmService service = new FilmService();
 
-        Optional<Film> risultato = service.returnFilmById(2);
+        Optional<Film> risultato = service.getFilmById(2);
 
         assertTrue(risultato.isPresent());
 
@@ -39,7 +39,7 @@ class FilmServiceTest {
     void returnFilmByIdConIdInesistenteRestituisceVuoto(){
         FilmService service = new FilmService();
 
-        Optional<Film> film = service.returnFilmById(10);
+        Optional<Film> film = service.getFilmById(10);
 
         assertTrue(film.isEmpty());
     }
