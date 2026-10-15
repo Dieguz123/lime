@@ -14,15 +14,15 @@ public class Film{
     private String name;
     private int releaseYear;
     private String platform;
-    private String Genre;
+    private String genre;
 
     protected Film(){}
 
-    public Film(String name, int year, String app, String type){
+    public Film(String name, int releaseYear, String platform, String genre){
         this.name = name;
-        this.releaseYear = year;
-        this.platform = app;
-        this.Genre = type;
+        this.releaseYear = releaseYear;
+        this.platform = platform;
+        this.genre = genre;
     }
 
     public Long getId() {
@@ -42,7 +42,7 @@ public class Film{
     }
 
     public String getGenre() {
-        return Genre;
+        return genre;
     }
 
 }
