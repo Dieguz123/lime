@@ -27,6 +27,7 @@ class FilmServiceTest {
 
     @Test
     void returnFilmsGetAll(){
+        repository.deleteAll();
 
         repository.save(new Film("Inception", 2010, "Prime", "Fantascienza"));
         repository.save(new Film("Star Trek", 2010, "Prime", "Fantascienza"));
