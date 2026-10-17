@@ -11,13 +11,15 @@ import com.diego.lime.repository.SwipeRepository;
 import com.diego.lime.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class SwipeService {
 
-    SwipeRepository swipeRepository;
-    RoomRepository roomRepository;
-    UserRepository userRepository;
-    FilmRepository filmRepository;
+    private final SwipeRepository swipeRepository;
+    private final RoomRepository roomRepository;
+    private final UserRepository userRepository;
+    private final FilmRepository filmRepository;
 
     public SwipeService(SwipeRepository swipeRepository,
                         RoomRepository roomRepository,
@@ -52,5 +54,20 @@ public class SwipeService {
 
         User otherMember = room.getOtherMember(user);
         return swipeRepository.existsByRoomAndUserAndFilmAndLikedTrue(room, otherMember, film);
+    }
+
+    public Optional<Film> getNextFilm(String inviteCode, Long userId) {
+        Room room = roomRepository.findByInviteCode(inviteCode)
+                .orElseThrow(() -> new NotFoundException("Room not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        if (!room.isMember(user)){
+            throw new IllegalStateException(("User is not a member of this room"));
+        }
+
+        return filmRepository.findNotSwipedByUserInRoom(room, user)
+                .stream()
+                .findFirst();
     }
 }

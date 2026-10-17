@@ -17,7 +17,7 @@ Content-Type: application/json
 { "creatorId": 1 }
 
 ### 4. Anna entra
-POST http://localhost:8080/api/rooms/A7KXHV/join
+POST http://localhost:8080/api/rooms/GT3GE3/join
 Content-Type: application/json
 
 { "userId": 2 }
@@ -39,3 +39,19 @@ POST http://localhost:8080/api/rooms/A7KXHV/swipes
 Content-Type: application/json
 
 { "userId": 1, "filmId": 1, "liked": false }
+
+
+### Prossimo film per Diego → Inception (film 1)
+GET http://localhost:8080/api/rooms/GT3GE3/next-film?userId=1
+
+### Diego vota Inception
+POST http://localhost:8080/api/rooms/GT3GE3/swipes
+Content-Type: application/json
+
+{ "userId": 1, "filmId": 1, "liked": true }
+
+### Prossimo film per Diego → ora Star Trek (film 2)
+GET http://localhost:8080/api/rooms/GT3GE3/next-film?userId=1
+
+### Prossimo film per Anna → ancora Inception, perché lei non l'ha votato
+GET http://localhost:8080/api/rooms/GT3GE3/next-film?userId=2
