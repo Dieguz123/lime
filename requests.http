@@ -1,18 +1,29 @@
-### Crea un utente
+### 1. Crea Diego
 POST http://localhost:8080/api/users
 Content-Type: application/json
 
-{
-  "username": "Diego"
-}
+{ "username": "Diego" }
 
-### Leggi l'utente con id 1
-GET http://localhost:8080/api/users/1
-
-### Prova con un nome vuoto
+### 2. Crea Anna
 POST http://localhost:8080/api/users
 Content-Type: application/json
 
-{
-  "username": ""
-}
+{ "username": "Anna" }
+
+### 3. Diego crea una stanza
+POST http://localhost:8080/api/rooms
+Content-Type: application/json
+
+{ "creatorId": 1 }
+
+### 4. Anna entra (metti il codice che ti ha restituito la richiesta 3)
+POST http://localhost:8080/api/rooms/XMF8HI/join
+Content-Type: application/json
+
+{ "userId": 2 }
+
+### 5. Diego riprova a entrare nella sua stanza
+POST http://localhost:8080/api/rooms/XMF8HI/join
+Content-Type: application/json
+
+{ "userId": 1 }
