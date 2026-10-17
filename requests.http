@@ -1,60 +1,56 @@
-### 1. Crea Diego (id 1)
+# Replace XXXXXX with the inviteCode returned by request 3
+@code = XXXXXX
+
+### 1. Create Diego (id 1)
 POST http://localhost:8080/api/users
 Content-Type: application/json
 
 { "username": "Diego" }
 
-### 2. Crea Anna (id 2)
+### 2. Create Anna (id 2)
 POST http://localhost:8080/api/users
 Content-Type: application/json
 
 { "username": "Anna" }
 
-### 3. Diego crea la stanza: copia l'inviteCode dalla risposta
+### 3. Diego creates a room → copy the inviteCode into @code above
 POST http://localhost:8080/api/rooms
 Content-Type: application/json
 
 { "creatorId": 1 }
 
-### 4. Anna entra
-POST http://localhost:8080/api/rooms/RZ6QDV/join
+### 4. Anna joins the room
+POST http://localhost:8080/api/rooms/{{code}}/join
 Content-Type: application/json
 
 { "userId": 2 }
 
-### 5. Diego dice sì a Inception (film 1) → match: false
-POST http://localhost:8080/api/rooms/RZ6QDV/swipes
+### 5. Next film for Diego → film 1
+GET http://localhost:8080/api/rooms/{{code}}/next-film?userId=1
+
+### 6. Diego likes film 1 → match: false
+POST http://localhost:8080/api/rooms/{{code}}/swipes
 Content-Type: application/json
 
 { "userId": 1, "filmId": 1, "liked": true }
 
-### 6. Anna dice sì a Inception → match: true 🎉
-POST http://localhost:8080/api/rooms/RZ6QDV/swipes
+### 7. Anna likes film 1 → match: true 🎉
+POST http://localhost:8080/api/rooms/{{code}}/swipes
 Content-Type: application/json
 
 { "userId": 2, "filmId": 1, "liked": true }
 
-### 7. Diego vota di nuovo Inception → 409 "Film already voted"
-POST http://localhost:8080/api/rooms/A7KXHV/swipes
+### 8. Diego votes film 1 again → 409 "Film already voted"
+POST http://localhost:8080/api/rooms/{{code}}/swipes
 Content-Type: application/json
 
 { "userId": 1, "filmId": 1, "liked": false }
 
+### 9. Next film for Diego → film 2
+GET http://localhost:8080/api/rooms/{{code}}/next-film?userId=1
 
-### Prossimo film per Diego → Inception (film 1)
-GET http://localhost:8080/api/rooms/GT3GE3/next-film?userId=1
+### 10. Next film for Anna → film 2
+GET http://localhost:8080/api/rooms/{{code}}/next-film?userId=2
 
-### Diego vota Inception
-POST http://localhost:8080/api/rooms/GT3GE3/swipes
-Content-Type: application/json
-
-{ "userId": 1, "filmId": 1, "liked": true }
-
-### Prossimo film per Diego → ora Star Trek (film 2)
-GET http://localhost:8080/api/rooms/GT3GE3/next-film?userId=1
-
-### Prossimo film per Anna → ancora Inception, perché lei non l'ha votato
-GET http://localhost:8080/api/rooms/GT3GE3/next-film?userId=2
-
-### I match della stanza
-GET http://localhost:8080/api/rooms/RZ6QDV/matches
+### 11. Matches in the room → film 1
+GET http://localhost:8080/api/rooms/{{code}}/matches

@@ -3,7 +3,6 @@ package com.diego.lime.controller;
 import com.diego.lime.dto.SwipeRequest;
 import com.diego.lime.dto.SwipeResponse;
 import com.diego.lime.model.Film;
-import com.diego.lime.service.FilmService;
 import com.diego.lime.service.SwipeService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;

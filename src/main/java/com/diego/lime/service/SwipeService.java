@@ -33,15 +33,13 @@ public class SwipeService {
     }
 
     public boolean swipe(String inviteCode, Long userId, Long filmId, boolean liked){
-        Room room = roomRepository.findByInviteCode(inviteCode)
-                .orElseThrow(() -> new NotFoundException("Room not found"));
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found"));
+        Room room = findRoom(inviteCode);
+        User user = findUser(userId);
         Film film = filmRepository.findById(filmId)
                 .orElseThrow(() -> new NotFoundException("Film not found"));
 
         if (!room.isMember(user)){
-            throw new IllegalStateException("User is not member of this room");
+            throw new IllegalStateException("User is not a member of this room");
         }
         if (swipeRepository.existsByRoomAndUserAndFilm(room, user, film)){
             throw new IllegalStateException("Film already voted");
@@ -58,13 +56,11 @@ public class SwipeService {
     }
 
     public Optional<Film> getNextFilm(String inviteCode, Long userId) {
-        Room room = roomRepository.findByInviteCode(inviteCode)
-                .orElseThrow(() -> new NotFoundException("Room not found"));
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found"));
+        Room room = findRoom(inviteCode);
+        User user = findUser(userId);
 
         if (!room.isMember(user)){
-            throw new IllegalStateException(("User is not a member of this room"));
+            throw new IllegalStateException("User is not a member of this room");
         }
 
         return filmRepository.findNotSwipedByUserInRoom(room, user)
@@ -73,8 +69,17 @@ public class SwipeService {
     }
 
     public List<Film> getMatches(String inviteCode){
-        Room room = roomRepository.findByInviteCode(inviteCode)
-                .orElseThrow(() -> new NotFoundException("Room not found"));
+        Room room = findRoom(inviteCode);
         return swipeRepository.findMatchedFilms(room);
+    }
+
+    private Room findRoom(String inviteCode){
+        return roomRepository.findByInviteCode(inviteCode)
+                .orElseThrow(() -> new NotFoundException("Room not found"));
+    }
+
+    private User findUser(Long userId){
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found"));
     }
 }
