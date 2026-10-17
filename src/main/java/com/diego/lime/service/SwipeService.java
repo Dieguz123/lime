@@ -11,6 +11,7 @@ import com.diego.lime.repository.SwipeRepository;
 import com.diego.lime.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -69,5 +70,11 @@ public class SwipeService {
         return filmRepository.findNotSwipedByUserInRoom(room, user)
                 .stream()
                 .findFirst();
+    }
+
+    public List<Film> getMatches(String inviteCode){
+        Room room = roomRepository.findByInviteCode(inviteCode)
+                .orElseThrow(() -> new NotFoundException("Room not found"));
+        return swipeRepository.findMatchedFilms(room);
     }
 }

@@ -9,6 +9,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/rooms/{code}")
 public class SwipeController {
@@ -29,5 +31,10 @@ public class SwipeController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.noContent()
                         .build());
+    }
+
+    @GetMapping("/matches")
+    public ResponseEntity<List<Film>> getMatches(@PathVariable String code){
+        return ResponseEntity.ok(swipeService.getMatches(code));
     }
 }

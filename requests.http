@@ -17,19 +17,19 @@ Content-Type: application/json
 { "creatorId": 1 }
 
 ### 4. Anna entra
-POST http://localhost:8080/api/rooms/GT3GE3/join
+POST http://localhost:8080/api/rooms/RZ6QDV/join
 Content-Type: application/json
 
 { "userId": 2 }
 
 ### 5. Diego dice sì a Inception (film 1) → match: false
-POST http://localhost:8080/api/rooms/A7KXHV/swipes
+POST http://localhost:8080/api/rooms/RZ6QDV/swipes
 Content-Type: application/json
 
 { "userId": 1, "filmId": 1, "liked": true }
 
 ### 6. Anna dice sì a Inception → match: true 🎉
-POST http://localhost:8080/api/rooms/A7KXHV/swipes
+POST http://localhost:8080/api/rooms/RZ6QDV/swipes
 Content-Type: application/json
 
 { "userId": 2, "filmId": 1, "liked": true }
@@ -55,3 +55,6 @@ GET http://localhost:8080/api/rooms/GT3GE3/next-film?userId=1
 
 ### Prossimo film per Anna → ancora Inception, perché lei non l'ha votato
 GET http://localhost:8080/api/rooms/GT3GE3/next-film?userId=2
+
+### I match della stanza
+GET http://localhost:8080/api/rooms/RZ6QDV/matches
