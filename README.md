@@ -1,5 +1,7 @@
 # Lime 🍋‍🟩
 
+![CI](https://github.com/Dieguz123/lime/actions/workflows/ci.yml/badge.svg)
+
 **Lime** is an app where you swipe through movies and say whether you like them or not.
 You join a room with one person by sharing a link, and when you both like the same movie, it's a match!
 
