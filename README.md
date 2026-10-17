@@ -1,7 +1,7 @@
 # Lime 🍋‍🟩
 
 **Lime** is an app where you swipe through movies and say whether you like them or not.
-You join a room with one or more people by sharing a link, and when everyone likes the same movie, it's a match!
+You join a room with one person by sharing a link, and when everyone likes the same movie, it's a match!
 
 Thanks to Lime, I will never argue with my girlfriend again about which movie to watch. 🍿
 
