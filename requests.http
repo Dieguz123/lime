@@ -1,29 +1,41 @@
-### 1. Crea Diego
+### 1. Crea Diego (id 1)
 POST http://localhost:8080/api/users
 Content-Type: application/json
 
 { "username": "Diego" }
 
-### 2. Crea Anna
+### 2. Crea Anna (id 2)
 POST http://localhost:8080/api/users
 Content-Type: application/json
 
 { "username": "Anna" }
 
-### 3. Diego crea una stanza
+### 3. Diego crea la stanza: copia l'inviteCode dalla risposta
 POST http://localhost:8080/api/rooms
 Content-Type: application/json
 
 { "creatorId": 1 }
 
-### 4. Anna entra (metti il codice che ti ha restituito la richiesta 3)
-POST http://localhost:8080/api/rooms/XMF8HI/join
+### 4. Anna entra
+POST http://localhost:8080/api/rooms/A7KXHV/join
 Content-Type: application/json
 
 { "userId": 2 }
 
-### 5. Diego riprova a entrare nella sua stanza
-POST http://localhost:8080/api/rooms/XMF8HI/join
+### 5. Diego dice sì a Inception (film 1) → match: false
+POST http://localhost:8080/api/rooms/A7KXHV/swipes
 Content-Type: application/json
 
-{ "userId": 1 }
+{ "userId": 1, "filmId": 1, "liked": true }
+
+### 6. Anna dice sì a Inception → match: true 🎉
+POST http://localhost:8080/api/rooms/A7KXHV/swipes
+Content-Type: application/json
+
+{ "userId": 2, "filmId": 1, "liked": true }
+
+### 7. Diego vota di nuovo Inception → 409 "Film already voted"
+POST http://localhost:8080/api/rooms/A7KXHV/swipes
+Content-Type: application/json
+
+{ "userId": 1, "filmId": 1, "liked": false }

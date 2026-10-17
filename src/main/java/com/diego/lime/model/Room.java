@@ -40,6 +40,14 @@ public class Room {
         this.partner = user;
     }
 
+    public boolean isMember(User user) {
+        return creator.getId().equals(user.getId()) || (partner != null && partner.getId().equals(user.getId()));
+    }
+
+    public User getOtherMember (User user) {
+        return creator.getId().equals(user.getId()) ? partner : creator;
+    }
+
     public Long getId() {
         return id;
     }
