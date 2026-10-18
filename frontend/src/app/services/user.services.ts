@@ -7,7 +7,7 @@ import {API_URL} from '../api';
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private http = inject(HttpClient);
-  private apiUrl = `${API_URL}/rooms`;
+  private apiUrl = `${API_URL}/users`;
 
   create(username: string): Observable<User>{
      return this.http.post<User>(this.apiUrl , { username })
