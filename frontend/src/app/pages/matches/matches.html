@@ -1,1 +1,13 @@
-<p>matches works!</p>
+<section class="matches">
+  <h2>Your matches 🍿 ({{ matches().length }})</h2>
+
+  <ul>
+    @for (film of matches(); track film.id) {
+      <li>{{ film.name }} ({{ film.releaseYear }}) · {{ film.platform }}</li>
+    } @empty {
+      <li>No matches yet, keep swiping! 👀</li>
+    }
+  </ul>
+
+  <a [routerLink]="['/room', code]">← Back to swiping</a>
+</section>
