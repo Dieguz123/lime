@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: lime-postgres
+    environment:
+      POSTGRES_DB: lime
+      POSTGRES_USER: lime
+      POSTGRES_PASSWORD: lime
+    ports:
+      - "5432:5432"
+    volumes:
+      - lime-data:/var/lib/postgresql
+
+volumes:
+  lime-data:
