@@ -1,12 +1,17 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { FilmService } from './services/film.service';
+import { Film } from './models/film';
 
 @Component({
-  imports: [RouterOutlet],
   selector: 'app-root',
-  styleUrl: './app.css',
   templateUrl: './app.html',
+  styleUrl: './app.css'
 })
-export class App {
-  protected readonly title = signal('frontend');
+export class App implements OnInit {
+  private filmService = inject(FilmService);
+  films = signal<Film[]>([]);
+
+  ngOnInit(): void {
+    this.filmService.getAll().subscribe(films => this.films.set(films));
+  }
 }
