@@ -7,30 +7,59 @@ You join a room with one person by sharing a link, and when you both like the sa
 
 Thanks to Lime, I will never argue with my girlfriend again about which movie to watch. 🍿
 
-> 🚧 **Work in progress.** The backend MVP is complete: users, rooms, swipes and matches. The frontend is coming next.
+> 🚧 **Work in progress.** The MVP is complete: create a room, share the invite code, swipe and see your matches. Next: PostgreSQL, real movies from TMDB, and deploy.
 
 ## Tech stack
 
+**Backend**
+
 - Java 25
 - Spring Boot 4
-- Gradle
-- JUnit 5
 - Spring Data JPA
 - H2 (in-memory database)
+- Gradle
+- JUnit 5
+
+**Frontend**
+
+- Angular 22
+- TypeScript
+- Signals
+
+**CI**
+
+- GitHub Actions: builds the backend and runs the tests on every push and pull request to `main`
 
 ## Getting started
+
+Both the backend and the frontend must be running at the same time.
+
+### Backend
 
 ```bash
 ./gradlew bootRun
 ```
 
-The app starts on `http://localhost:8080`.
+The API starts on `http://localhost:8080`.
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+ng serve
+```
+
+The app starts on `http://localhost:4200`.
 
 ## Running the tests
 
 ```bash
 ./gradlew test
 ```
+
+The tests are integration tests: they use `@SpringBootTest` to start the full Spring context with the H2 database,
+and `@Transactional` to roll back every test, so each one starts from clean data.
 
 ## API endpoints
 
@@ -49,6 +78,8 @@ The app starts on `http://localhost:8080`.
 
 ## Project structure
 
+### Backend
+
 The code is organized in layers:
 
 - **controller**: handles HTTP requests and decides the response (200, 404, ...)
@@ -57,15 +88,27 @@ The code is organized in layers:
 - **model**: the classes that represent the data, such as `Film`
 - **dto**: the request and response bodies of the API, such as `SwipeRequest`
 - **exception**: custom exceptions and the global handler that turns them into HTTP status codes (404, 409)
+- **config**: the CORS configuration, which allows requests from the Angular dev server (`http://localhost:4200`)
 
-The controller receives the service through constructor-based dependency injection.
-This keeps the layers separate, and the business logic can be tested without starting Spring.
+The controller receives the service through constructor-based dependency injection, which keeps the layers separate.
+
+### Frontend
+
+The Angular app lives in the `frontend` folder:
+
+- **pages**: `home` (create or join a room), `swipe` (vote the movies) and `matches` (the movies you both liked)
+- **services**: call the backend REST API
+- **models**: TypeScript interfaces matching the backend DTOs
+- **session**: the current user is saved in `localStorage`, so it survives a page reload
 
 ## Roadmap
 
-- [ ] PostgreSQL instead of H2
-- [x] Rooms shared through an invite link
+- [x] Rooms shared through an invite code
 - [x] Swipes and match logic
+- [x] Mobile-friendly web interface
+- [ ] PostgreSQL with Docker Compose
 - [ ] Real movie data from the TMDB API
-- [ ] Mobile-friendly web interface
+- [ ] Deploy online
+- [ ] Installable PWA
+- [ ] Real-time match notifications (WebSocket)
 - [ ] Authentication with Spring Security (hashed passwords)
