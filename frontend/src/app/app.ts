@@ -1,17 +1,10 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { FilmService } from './services/film.service';
-import { Film } from './models/film';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App implements OnInit {
-  private filmService = inject(FilmService);
-  films = signal<Film[]>([]);
-
-  ngOnInit(): void {
-    this.filmService.getAll().subscribe(films => this.films.set(films));
-  }
-}
+export class App {}

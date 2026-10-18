@@ -1,0 +1,21 @@
+<section class="home">
+  <label>
+    Your name
+    <input [(ngModel)]="username" placeholder="Diego" maxlength="30" />
+  </label>
+
+  <button (click)="createRoom()" [disabled]="!username.trim()">
+    Create a room
+  </button>
+
+  <p>or join your partner's room</p>
+
+  <input [(ngModel)]="code" placeholder="Invite code" maxlength="6" />
+  <button (click)="joinRoom()" [disabled]="!username.trim() || code.length !== 6">
+    Join
+  </button>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+</section>

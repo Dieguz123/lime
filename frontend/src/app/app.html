@@ -1,9 +1,7 @@
-<h1>Lime 🍋‍🟩</h1>
+<header>
+  <h1>Lime 🍋‍🟩</h1>
+</header>
 
-<ul>
-  @for (film of films(); track film.id) {
-    <li>{{ film.name }} ({{ film.releaseYear }}) · {{ film.platform }}</li>
-  } @empty {
-    <li>No films yet</li>
-  }
-</ul>
+<main>
+  <router-outlet />
+</main>
