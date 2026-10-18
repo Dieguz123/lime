@@ -1,0 +1,83 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Tab: i radio sono nascosti ma restano usabili da tastiera */
+.tab-radio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border-radius: 10px;
+  color: var(--text-muted);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+#tab-create:checked ~ .tabs [for="tab-create"],
+#tab-join:checked ~ .tabs [for="tab-join"] {
+  background: var(--lime);
+  color: var(--lime-ink);
+}
+
+#tab-create:focus-visible ~ .tabs [for="tab-create"],
+#tab-join:focus-visible ~ .tabs [for="tab-join"] {
+  outline: 3px solid var(--lime);
+  outline-offset: 2px;
+}
+
+.panel {
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+#tab-create:checked ~ .panel-create,
+#tab-join:checked ~ .panel-join {
+  display: flex;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.code-input {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-weight: 700;
+}
+
+.error {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  background: var(--red-tint);
+  color: var(--red-text);
+  font-weight: 600;
+}

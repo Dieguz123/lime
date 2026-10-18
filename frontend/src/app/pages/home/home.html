@@ -1,19 +1,38 @@
 <section class="home">
-  <label>
-    Your name
-    <input [(ngModel)]="username" placeholder="Diego" maxlength="30" />
-  </label>
+  <input class="tab-radio" type="radio" name="home-tab" id="tab-create" checked />
+  <input class="tab-radio" type="radio" name="home-tab" id="tab-join" />
 
-  <button (click)="createRoom()" [disabled]="!username.trim()">
-    Create a room
-  </button>
+  <div class="tabs">
+    <label class="tab" for="tab-create">Create a room</label>
+    <label class="tab" for="tab-join">Join a room</label>
+  </div>
 
-  <p>or join your partner's room</p>
+  <div class="panel panel-create">
+    <label class="field">
+      Your name
+      <input class="input" [(ngModel)]="username" placeholder="Diego" maxlength="30" />
+    </label>
 
-  <input [(ngModel)]="code" placeholder="Invite code" maxlength="6" />
-  <button (click)="joinRoom()" [disabled]="!username.trim() || code.length !== 6">
-    Join
-  </button>
+    <button class="btn btn-block" (click)="createRoom()" [disabled]="!username.trim()">
+      Create a room
+    </button>
+  </div>
+
+  <div class="panel panel-join">
+    <label class="field">
+      Your name
+      <input class="input" [(ngModel)]="username" placeholder="Diego" maxlength="30" />
+    </label>
+
+    <label class="field">
+      Invite code
+      <input class="input code-input" [(ngModel)]="code" placeholder="ABC123" maxlength="6" />
+    </label>
+
+    <button class="btn btn-block" (click)="joinRoom()" [disabled]="!username.trim() || code.length !== 6">
+      Join
+    </button>
+  </div>
 
   @if (error()) {
     <p class="error">{{ error() }}</p>

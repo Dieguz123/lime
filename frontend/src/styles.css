@@ -1,1 +1,146 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  color-scheme: dark;
+
+  --lime: #a3e635;
+  --lime-strong: #84cc16;
+  --lime-hover: #bef264;
+  --lime-tint: rgba(163, 230, 53, 0.14);
+  --lime-ink: #10200a;
+  --red: #f87171;
+  --red-strong: #ef4444;
+  --red-tint: rgba(248, 113, 113, 0.14);
+  --red-text: #fca5a5;
+
+  --bg: #070b16;
+  --surface: #111a2e;
+  --surface-2: #1b2640;
+  --text: #e8edf7;
+  --text-muted: #94a0b8;
+  --border: #26324d;
+  --disabled-bg: #1f283b;
+  --disabled-text: #5d6880;
+
+  --radius: 14px;
+  --radius-lg: 22px;
+  --shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  --tap: 52px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1,
+h2 {
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* Bottoni */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--tap);
+  padding: 0 20px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--lime);
+  color: var(--lime-ink);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s, transform 0.1s;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--lime-hover);
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  background: var(--disabled-bg);
+  color: var(--disabled-text);
+  cursor: not-allowed;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-small {
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 0.875rem;
+}
+
+.btn:focus-visible,
+.input:focus-visible,
+.link:focus-visible {
+  outline: 3px solid var(--lime);
+  outline-offset: 2px;
+}
+
+/* Input */
+.input {
+  width: 100%;
+  min-height: var(--tap);
+  padding: 0 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+}
+
+.input:focus {
+  border-color: var(--lime);
+}
+
+.input::placeholder {
+  color: var(--disabled-text);
+}
+
+/* Link */
+.link {
+  color: var(--lime);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,13 +1,16 @@
 <section class="matches">
   <h2>Your matches 🍿 ({{ matches().length }})</h2>
 
-  <ul>
+  <ul class="match-list">
     @for (film of matches(); track film.id) {
-      <li>{{ film.name }} ({{ film.releaseYear }}) · {{ film.platform }}</li>
+      <li class="match-card">
+        <span class="match-title">{{ film.name }}</span>
+        <span class="match-meta">({{ film.releaseYear }}) · {{ film.platform }}</span>
+      </li>
     } @empty {
-      <li>No matches yet, keep swiping! 👀</li>
+      <li class="empty">No matches yet, keep swiping! 👀</li>
     }
   </ul>
 
-  <a [routerLink]="['/room', code]">← Back to swiping</a>
+  <a class="link back" [routerLink]="['/room', code]">← Back to swiping</a>
 </section>

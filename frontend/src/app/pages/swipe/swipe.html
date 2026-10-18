@@ -1,36 +1,42 @@
 <section class="swipe">
   <p class="invite">
-    Invite code: <strong>{{ code }}</strong>
-    <button (click)="copyCode()">Copy</button>
+    <span class="invite-label">Invite code:</span> <strong class="invite-code">{{ code }}</strong>
+    <button class="btn btn-small" (click)="copyCode()">Copy</button>
   </p>
 
   @if (loading()) {
-    <p>Loading...</p>
+    <p class="status">Loading...</p>
   } @else {
     @if (film(); as film) {
-      <article class="card">
-        <h2>{{ film.name }}</h2>
-        <p>{{ film.releaseYear }} · {{ film.genre }}</p>
-        <p class="platform">{{ film.platform }}</p>
-      </article>
+      <div class="film">
+        <article class="card">
+          <h2 class="card-title">{{ film.name }}</h2>
+        </article>
+
+        <div class="badges">
+          <p class="badge">{{ film.releaseYear }}</p>
+          <p class="badge platform">{{ film.platform }}</p>
+          <p class="badge">{{ film.genre }}</p>
+        </div>
+      </div>
 
       <div class="actions">
-        <button class="no" (click)="vote(false)" [disabled]="voting()">👎</button>
-        <button class="yes" (click)="vote(true)" [disabled]="voting()">👍</button>
+        <button class="vote no" (click)="vote(false)" [disabled]="voting()" aria-label="No">🚫</button>
+        <button class="vote yes" (click)="vote(true)" [disabled]="voting()" aria-label="Yes">❤️</button>
       </div>
     } @else {
-      <p>You've seen all the films! 🍿</p>
+      <p class="status">You've seen all the films! 🍿</p>
     }
   }
 
-  <a [routerLink]="['/room', code, 'matches']">See your matches →</a>
+  <a class="link" [routerLink]="['/room', code, 'matches']">See your matches →</a>
 
   @if (matchFilm(); as match) {
     <div class="overlay" (click)="closeMatch()">
       <div class="popup">
         <h2>It's a match! 🎉</h2>
         <p>You both want to watch <strong>{{ match.name }}</strong></p>
-        <button>Nice!</button>
+        <button class="btn btn-block">Nice!</button>
       </div>
     </div>
   }
