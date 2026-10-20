@@ -1,0 +1,7 @@
+DELETE FROM swipes;
+DELETE FROM rooms;
+DELETE FROM users;
+
+ALTER TABLE users ALTER COLUMN username SET NOT NULL;
+ALTER TABLE users ADD COLUMN password_hash VARCHAR(100) NOT NULL;
+ALTER TABLE users ADD CONSTRAINT uk_users_username UNIQUE (username);
