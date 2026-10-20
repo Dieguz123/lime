@@ -4,23 +4,32 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "films")
-public class Film{
+public class Film {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private int releaseYear;
+    private Integer releaseYear;
     private String platform;
     private String genre;
+    @Column(unique = true)
+    private Long tmdbId;
+    @Column(length = 2000)
+    private String overview;
+    private String posterPath;
 
-    protected Film(){}
+    protected Film() {
+    }
 
-    public Film(String name, int releaseYear, String platform, String genre){
+    public Film(String name, int releaseYear, String platform, String genre, Long tmdbId, String overview, String posterPath) {
         this.name = name;
         this.releaseYear = releaseYear;
         this.platform = platform;
         this.genre = genre;
+        this.tmdbId = tmdbId;
+        this.overview = overview;
+        this.posterPath = posterPath;
     }
 
     public Long getId() {
@@ -43,4 +52,16 @@ public class Film{
         return genre;
     }
 
+
+    public Long getTmdbId() {
+        return tmdbId;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public String getPosterPath() {
+        return posterPath;
+    }
 }
