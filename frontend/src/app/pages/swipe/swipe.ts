@@ -25,7 +25,7 @@ export class Swipe implements OnInit {
   matchFilm = signal<Film | null>(null);
   flipped = signal(false);
 
-  readonly posterBaseUrl ="https://image.tmdb.org/t/p/w500"
+  readonly posterBaseUrl = "https://image.tmdb.org/t/p/w500";
 
   ngOnInit(): void {
     if (!this.user) {

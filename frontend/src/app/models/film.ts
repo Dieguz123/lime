@@ -5,6 +5,6 @@ export interface Film {
   platform: string | null;
   genre: string | null;
   tmdbId: number;
-  overview: string | null,
-  posterPath: string | null
+  overview: string | null;
+  posterPath: string | null;
 }
