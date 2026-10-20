@@ -23,6 +23,9 @@ export class Swipe implements OnInit {
   loading = signal(true);
   voting = signal(false);
   matchFilm = signal<Film | null>(null);
+  flipped = signal(false);
+
+  readonly posterBaseUrl ="https://image.tmdb.org/t/p/w500"
 
   ngOnInit(): void {
     if (!this.user) {
@@ -33,6 +36,7 @@ export class Swipe implements OnInit {
   }
 
   vote(liked: boolean): void {
+    this.flipped.set(false);
     const film = this.film();
     if (!film || !this.user || this.voting()) return;
 
@@ -60,5 +64,9 @@ export class Swipe implements OnInit {
       this.film.set(film);
       this.loading.set(false);
     });
+  }
+
+  toggleFlip(): void {
+    this.flipped.update(value => !value);
   }
 }

@@ -9,14 +9,44 @@
   } @else {
     @if (film(); as film) {
       <div class="film">
-        <article class="card">
-          <h2 class="card-title">{{ film.name }}</h2>
+        <article class="card"
+                 [class.has-poster]="film.posterPath"
+                 [class.flipped]="flipped()"
+                 (click)="toggleFlip()"
+                 (keydown.enter)="toggleFlip()"
+                 tabindex="0"
+                 [attr.aria-label]="'Show plot of ' + film.name">
+          <div class="card-inner">
+            <div class="card-face card-front">
+              @if (film.posterPath) {
+                <img class="poster"
+                     [src]="posterBaseUrl + film.posterPath"
+                     [alt]="'Poster of ' + film.name">
+              }
+              <h2 class="card-title">{{ film.name }}</h2>
+            </div>
+
+            <div class="card-face card-back">
+              <h3 class="back-title">{{ film.name }}</h3>
+              @if (film.overview) {
+                <p class="overview">{{ film.overview }}</p>
+              } @else {
+                <p class="overview">No plot available.</p>
+              }
+            </div>
+          </div>
         </article>
 
         <div class="badges">
-          <p class="badge">{{ film.releaseYear }}</p>
-          <p class="badge platform">{{ film.platform }}</p>
-          <p class="badge">{{ film.genre }}</p>
+          @if (film.releaseYear != null) {
+            <p class="badge">{{ film.releaseYear }}</p>
+          }
+          @if (film.platform) {
+            <p class="badge platform">{{ film.platform }}</p>
+          }
+          @if (film.genre) {
+            <p class="badge">{{ film.genre }}</p>
+          }
         </div>
       </div>
 
