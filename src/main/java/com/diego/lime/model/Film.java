@@ -22,7 +22,7 @@ public class Film {
     protected Film() {
     }
 
-    public Film(String name, int releaseYear, String platform, String genre, Long tmdbId, String overview, String posterPath) {
+    public Film(String name, Integer releaseYear, String platform, String genre, Long tmdbId, String overview, String posterPath) {
         this.name = name;
         this.releaseYear = releaseYear;
         this.platform = platform;
@@ -40,7 +40,7 @@ public class Film {
         return name;
     }
 
-    public int getReleaseYear() {
+    public Integer getReleaseYear() {
         return releaseYear;
     }
 
@@ -52,16 +52,9 @@ public class Film {
         return genre;
     }
 
+    public Long getTmdbId() { return tmdbId; }
 
-    public Long getTmdbId() {
-        return tmdbId;
-    }
+    public String getOverview() { return overview; }
 
-    public String getOverview() {
-        return overview;
-    }
-
-    public String getPosterPath() {
-        return posterPath;
-    }
+    public String getPosterPath() { return posterPath; }
 }
