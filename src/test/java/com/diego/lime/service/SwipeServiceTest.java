@@ -119,6 +119,14 @@ class SwipeServiceTest {
                 () -> swipeService.getMatches(code, marco.getId()));
 
     }
+
+    @Test
+    void getNextFilm_UserNotInRoom_throws(){
+        User marco = userService.register("marco", "12345");
+
+        assertThrows(ForbiddenException.class,
+                () -> swipeService.getNextFilm(code, marco.getId()));
+    }
 }
 
 

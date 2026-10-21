@@ -8,6 +8,8 @@ import com.diego.lime.repository.RoomRepository;
 import com.diego.lime.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class RoomService {
     private final RoomRepository roomRepository;
@@ -39,7 +41,10 @@ public class RoomService {
         return room;
     }
 
-
+    public List<Room> getMyRooms(Long userId){
+        User user = findUser(userId);
+        return roomRepository.findByCreatorOrPartner(user, user);
+    }
 
 
     public Room joinRoom(String inviteCode, Long userId) {

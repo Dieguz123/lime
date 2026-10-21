@@ -11,6 +11,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/rooms")
 public class RoomController {
@@ -37,5 +39,14 @@ public class RoomController {
     public ResponseEntity<RoomResponse> joinRoom (@PathVariable String code,@AuthenticationPrincipal Jwt jwt){
         Room room = roomService.joinRoom(code, CurrentUser.id(jwt));
         return ResponseEntity.ok(RoomResponse.from(room));
+    }
+
+    @GetMapping("/mine")
+    public ResponseEntity<List<RoomResponse>> getMyRooms(@AuthenticationPrincipal Jwt jwt){
+        List<RoomResponse> rooms = roomService.getMyRooms(CurrentUser.id(jwt))
+                .stream()
+                .map(RoomResponse::from)
+                .toList();
+        return ResponseEntity.ok(rooms);
     }
 }

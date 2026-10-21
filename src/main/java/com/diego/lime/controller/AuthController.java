@@ -1,5 +1,6 @@
 package com.diego.lime.controller;
 
+import com.diego.lime.config.CurrentUser;
 import com.diego.lime.dto.LoginRequest;
 import com.diego.lime.dto.LoginResponse;
 import com.diego.lime.dto.RegisterRequest;
@@ -13,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Objects;
 
 @RequestMapping("/api/auth")
 @RestController
@@ -43,7 +42,7 @@ public class AuthController {
 
     @GetMapping("/me")
     public ResponseEntity<UserResponse> me(@AuthenticationPrincipal Jwt jwt) {
-        Long userId = Long.valueOf(Objects.requireNonNull(jwt.getSubject(), "Token without subject"));
+        Long userId = CurrentUser.id(jwt);
         return service.getUserById(userId)
                 .map(UserResponse::from)
                 .map(ResponseEntity::ok)
