@@ -32,7 +32,7 @@ public class UserServiceTest {
 
     @Test
     void register_normalizesUsername() {
-        User diego = userService.register("Diego", "12345");
+        User diego = userService.register("Diego    ", "12345");
 
         assertEquals("diego", diego.getUsername());
     }

@@ -2,12 +2,8 @@ package com.diego.lime.service;
 
 import com.diego.lime.model.User;
 import com.diego.lime.repository.UserRepository;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.Locale;
 import java.util.Optional;
