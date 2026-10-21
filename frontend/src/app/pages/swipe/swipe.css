@@ -5,6 +5,12 @@
   gap: 24px;
 }
 
+.back {
+  align-self: flex-start;
+  padding: 10px 0;
+  margin-bottom: -12px;
+}
+
 /* Codice invito */
 .invite {
   display: flex;
