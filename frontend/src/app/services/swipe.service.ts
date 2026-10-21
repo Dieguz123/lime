@@ -13,10 +13,8 @@ export class SwipeService {
     return this.http.post<SwipeResponse>(`${API_URL}/rooms/${code}/swipes`, request);
   }
 
-  nextFilm(code: string, userId: number): Observable<Film | null> {
-    return this.http.get<Film | null>(`${API_URL}/rooms/${code}/next-film`, {
-      params: { userId }
-    });
+  nextFilm(code: string): Observable<Film | null> {
+    return this.http.get<Film | null>(`${API_URL}/rooms/${code}/next-film`);
   }
 
   matches(code: string): Observable<Film[]> {

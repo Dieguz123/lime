@@ -1,5 +1,6 @@
 package com.diego.lime.service;
 
+import com.diego.lime.exception.ForbiddenException;
 import com.diego.lime.model.Film;
 import com.diego.lime.model.Room;
 import com.diego.lime.model.User;
@@ -37,8 +38,8 @@ class SwipeServiceTest {
 
     @BeforeEach
     void setUp() {
-        diego = userService.createUser("Diego");
-        anna = userService.createUser("Anna");
+        diego = userService.register("Diego", "password123");
+        anna = userService.register("Anna", "Anna");
 
         Room room = roomService.createRoom(diego.getId());
         code = room.getInviteCode();
@@ -91,8 +92,8 @@ class SwipeServiceTest {
 
     @Test
     void swipe_userNotInRoom_throws() {
-        User marco = userService.createUser("Marco");
-        assertThrows(IllegalStateException.class,
+        User marco = userService.register("Marco", "1234567890");
+        assertThrows(ForbiddenException.class,
                 () -> swipeService.swipe(code, marco.getId(), inception.getId(), true));
     }
 
@@ -101,10 +102,30 @@ class SwipeServiceTest {
         swipeService.swipe(code, diego.getId(), inception.getId(), true);
         swipeService.swipe(code, anna.getId(), inception.getId(), true);
 
-        List<Film> matches = swipeService.getMatches(code);
+        List<Film> matches = swipeService.getMatches(code, diego.getId());
 
         assertEquals(1, matches.size());
         assertEquals("Inception", matches.get(0).getName());
+    }
+
+    @Test
+    void getMatches_userNotInRoom_throws() {
+        swipeService.swipe(code, diego.getId(), inception.getId(), true);
+        swipeService.swipe(code, anna.getId(), inception.getId(), true);
+
+        User marco = userService.register("marco", "12345");
+
+        assertThrows(ForbiddenException.class,
+                () -> swipeService.getMatches(code, marco.getId()));
+
+    }
+
+    @Test
+    void getNextFilm_UserNotInRoom_throws(){
+        User marco = userService.register("marco", "12345");
+
+        assertThrows(ForbiddenException.class,
+                () -> swipeService.getNextFilm(code, marco.getId()));
     }
 }
 

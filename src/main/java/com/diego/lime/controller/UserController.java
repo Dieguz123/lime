@@ -1,12 +1,12 @@
 package com.diego.lime.controller;
 
-import com.diego.lime.dto.CreateUserRequest;
-import com.diego.lime.model.User;
+import com.diego.lime.dto.UserResponse;
 import com.diego.lime.service.UserService;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/users")
@@ -18,17 +18,11 @@ public class UserController {
         this.service = service;
     }
 
-    @PostMapping
-    public ResponseEntity<User> createUser(@Valid @RequestBody CreateUserRequest request){
-        User created = service.createUser(request.username());
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
-    }
-
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id){
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id){
         return service.getUserById(id)
+                .map(UserResponse::from)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound()
-                        .build());
+                .orElse(ResponseEntity.notFound().build());
     }
 }

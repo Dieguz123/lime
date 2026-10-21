@@ -1,0 +1,57 @@
+<section class="auth">
+  <div class="intro">
+    <p class="eyebrow">Movie night, decided together</p>
+    <h2>Swipe films together. Watch the ones you both love.</h2>
+  </div>
+
+  <input class="tab-radio" type="radio" name="auth-tab" id="tab-login" checked />
+  <input class="tab-radio" type="radio" name="auth-tab" id="tab-register" />
+
+  <div class="tabs">
+    <label class="tab" for="tab-login">Log in</label>
+    <label class="tab" for="tab-register">Sign up</label>
+  </div>
+
+  <form class="panel panel-login" (ngSubmit)="login()">
+    <label class="field">
+      Username
+      <input class="input" name="username" [(ngModel)]="username"
+             autocomplete="username" autocapitalize="none" maxlength="30" />
+    </label>
+
+    <label class="field">
+      Password
+      <input class="input" type="password" name="password" [(ngModel)]="password"
+             autocomplete="current-password" />
+    </label>
+
+    <button class="btn btn-block" type="submit"
+            [disabled]="!username.trim() || !password || loading()">
+      Log in
+    </button>
+  </form>
+
+  <form class="panel panel-register" (ngSubmit)="register()">
+    <label class="field">
+      Username
+      <input class="input" name="username" [(ngModel)]="username"
+             autocomplete="username" autocapitalize="none" maxlength="30" />
+    </label>
+
+    <label class="field">
+      Password
+      <input class="input" type="password" name="password" [(ngModel)]="password"
+             autocomplete="new-password" maxlength="72" />
+    </label>
+    <p class="hint">At least 8 characters.</p>
+
+    <button class="btn btn-block" type="submit"
+            [disabled]="!username.trim() || password.length < 8 || loading()">
+      Create account
+    </button>
+  </form>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+</section>

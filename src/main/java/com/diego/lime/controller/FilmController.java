@@ -1,12 +1,12 @@
 package com.diego.lime.controller;
 
 import com.diego.lime.model.Film;
+import com.diego.lime.service.FilmService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.http.ResponseEntity;
-import com.diego.lime.service.FilmService;
 
 import java.util.List;
 

@@ -10,11 +10,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
+    private String passwordHash;
 
     protected User(){}
 
-    public User(String username){
+    public User(String username, String passwordHash){
         this.username = username;
+        this.passwordHash = passwordHash;
     }
 
     public Long getId(){
@@ -25,7 +27,9 @@ public class User {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getPasswordHash() {
+        return passwordHash;
     }
+
+
 }

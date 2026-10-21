@@ -1,42 +1,58 @@
-import {Component, inject, signal} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {Router} from '@angular/router';
-import {switchMap, tap} from 'rxjs';
-import {UserService} from '../../services/user.service';
+import {Router, RouterLink} from '@angular/router';
 import {RoomService} from '../../services/room.service';
-import {SessionService} from '../../services/session.service';
+import {AuthService} from '../../services/auth.service';
+import {Room} from '../../models/room';
 
 @Component({
   selector: 'app-home',
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
-export class Home {
-  private userService = inject(UserService);
+export class Home implements OnInit {
+  auth = inject(AuthService);
   private roomService = inject(RoomService);
-  private session = inject(SessionService);
   private router = inject(Router);
 
-  username = '';
+  rooms = signal<Room[]>([]);
+  loading = signal(true);
   code = '';
   error = signal<string | null>(null);
 
+  ngOnInit(): void {
+    if (this.auth.user() == null) {
+      this.auth.loadMe().subscribe();
+    }
+    this.roomService.mine().subscribe(rooms => {
+        this.rooms.set(rooms);
+        this.loading.set(false);
+      }
+    )
+  }
+
+  otherMember(room: Room): string | null {
+    const me = this.auth.user();
+
+    if (!room.partner || !me) {
+      return null;
+    }
+
+    return room.creator.id === me.id
+      ? room.partner.username
+      : room.creator.username;
+  }
+
   createRoom(): void {
-    this.userService.create(this.username).pipe(
-      tap(user => this.session.setUser(user)),
-      switchMap(user => this.roomService.create(user.id))
-    ).subscribe({
+    this.roomService.create().subscribe({
       next: room => this.router.navigate(['/room', room.inviteCode]),
       error: () => this.error.set('Something went wrong, try again')
     });
   }
 
   joinRoom(): void {
-    this.userService.create(this.username).pipe(
-      tap(user => this.session.setUser(user)),
-      switchMap(user => this.roomService.join(this.code.toUpperCase(), user.id))
-    ).subscribe({
+    this.roomService.join(this.code.toUpperCase()).subscribe({
       next: room => this.router.navigate(['/room', room.inviteCode]),
       error: (err) => this.error.set(
         err.status === 404 ? 'Room not found' :
@@ -44,5 +60,10 @@ export class Home {
             'Something went wrong, try again'
       )
     });
+  }
+
+  logout(): void {
+    this.auth.logout();
+    this.router.navigate(['/login']);
   }
 }

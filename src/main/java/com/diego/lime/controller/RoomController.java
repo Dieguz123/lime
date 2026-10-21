@@ -1,14 +1,17 @@
 package com.diego.lime.controller;
 
 
-import com.diego.lime.dto.CreateRoomRequest;
-import com.diego.lime.dto.JoinRoomRequest;
+import com.diego.lime.config.CurrentUser;
+import com.diego.lime.dto.RoomResponse;
 import com.diego.lime.model.Room;
 import com.diego.lime.service.RoomService;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/rooms")
@@ -21,24 +24,29 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<Room> createRoom(@Valid @RequestBody CreateRoomRequest request) {
-        Room created = roomService.createRoom(request.creatorId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    public ResponseEntity<RoomResponse> createRoom(@AuthenticationPrincipal Jwt jwt) {
+        Room created = roomService.createRoom(CurrentUser.id(jwt));
+        return ResponseEntity.status(HttpStatus.CREATED).body(RoomResponse.from(created));
     }
 
     @GetMapping("/{code}")
-    public ResponseEntity<Room> getRoomByCode(@PathVariable String code) {
-        return roomService.getRoomByCode(code)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound()
-                        .build());
+    public ResponseEntity<RoomResponse> getRoomByCode(@PathVariable String code, @AuthenticationPrincipal Jwt jwt) {
+        Room room =  roomService.getRoomByCode(code, CurrentUser.id(jwt));
+        return ResponseEntity.ok(RoomResponse.from(room));
     }
 
     @PostMapping("/{code}/join")
-    public ResponseEntity<Room> joinRoom (@PathVariable String code, @Valid @RequestBody JoinRoomRequest request){
-        Room room = roomService.joinRoom(code, request.userId());
-        return ResponseEntity.ok(room);
+    public ResponseEntity<RoomResponse> joinRoom (@PathVariable String code,@AuthenticationPrincipal Jwt jwt){
+        Room room = roomService.joinRoom(code, CurrentUser.id(jwt));
+        return ResponseEntity.ok(RoomResponse.from(room));
     }
 
-
+    @GetMapping("/mine")
+    public ResponseEntity<List<RoomResponse>> getMyRooms(@AuthenticationPrincipal Jwt jwt){
+        List<RoomResponse> rooms = roomService.getMyRooms(CurrentUser.id(jwt))
+                .stream()
+                .map(RoomResponse::from)
+                .toList();
+        return ResponseEntity.ok(rooms);
+    }
 }
