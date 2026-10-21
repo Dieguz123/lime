@@ -1,5 +1,6 @@
 package com.diego.lime.service;
 
+import com.diego.lime.exception.InvalidCredentialsException;
 import com.diego.lime.model.User;
 import com.diego.lime.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,5 +33,20 @@ public class UserService {
 
     public Optional<User> getUserById(Long id){
         return userRepository.findById(id);
+    }
+
+    public User authenticate(String username, String rawPassword) {
+        User user = userRepository.findByUsername(normalize(username))
+                .orElseThrow(() -> new InvalidCredentialsException("Invalid username or password!"));
+
+        if (!passwordEncoder.matches(rawPassword, user.getPasswordHash())){
+            throw new InvalidCredentialsException("Invalid username or password!");
+        }
+
+        return user;
+    }
+
+    private String normalize(String username){
+        return username.trim().toLowerCase(Locale.ROOT);
     }
 }

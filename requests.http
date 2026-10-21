@@ -64,3 +64,18 @@ Content-Type: application/json
   "username": "Diego",
   "password": "lime-password"
 }
+
+### Login
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "Diego",
+  "password": "lime-password"
+}
+
+> {% client.global.set("token", response.body.token); %}
+
+### Me
+GET http://localhost:8080/api/auth/me
+Authorization: Bearer {{token}}
