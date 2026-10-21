@@ -1,11 +1,23 @@
 <section class="matches">
   <h2>Your matches 🍿 ({{ matches().length }})</h2>
 
-  <ul class="match-list">
+  <ul class="match-grid">
     @for (film of matches(); track film.id) {
       <li class="match-card">
-        <span class="match-title">{{ film.name }}</span>
-        <span class="match-meta">({{ film.releaseYear }}) · {{ film.platform }}</span>
+        @if (film.posterPath) {
+          <img class="match-poster"
+               [src]="posterBaseUrl + film.posterPath"
+               [alt]="'Poster of ' + film.name"
+               loading="lazy">
+        } @else {
+          <div class="match-poster placeholder">{{ film.name }}</div>
+        }
+        <div class="match-info">
+          <span class="match-title">{{ film.name }}</span>
+          @if (film.releaseYear != null) {
+            <span class="match-meta">{{ film.releaseYear }}</span>
+          }
+        </div>
       </li>
     } @empty {
       <li class="empty">No matches yet, keep swiping! 👀</li>

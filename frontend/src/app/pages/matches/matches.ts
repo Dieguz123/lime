@@ -16,6 +16,8 @@ export class Matches implements OnInit {
   code = this.route.snapshot.paramMap.get('code')!;
   matches = signal<Film[]>([]);
 
+  readonly posterBaseUrl = 'https://image.tmdb.org/t/p/w185';
+
   ngOnInit(): void {
     this.swipeService.matches(this.code)
       .subscribe(films => this.matches.set(films));
