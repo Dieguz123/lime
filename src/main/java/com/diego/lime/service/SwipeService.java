@@ -38,15 +38,11 @@ public class SwipeService {
         User user = findUser(userId);
         Film film = filmRepository.findById(filmId)
                 .orElseThrow(() -> new NotFoundException("Film not found"));
-
-        if (!room.isMember(user)){
-            throw new ForbiddenException("User is not a member of this room");
-        }
+        requireMember(room,user);
         if (swipeRepository.existsByRoomAndUserAndFilm(room, user, film)){
             throw new IllegalStateException("Film already voted");
         }
 
-        requireMember(room,user);
 
         swipeRepository.save(new Swipe(room, user, film , liked));
 
@@ -61,10 +57,6 @@ public class SwipeService {
     public Optional<Film> getNextFilm(String inviteCode, Long userId) {
         Room room = findRoom(inviteCode);
         User user = findUser(userId);
-
-        if (!room.isMember(user)){
-            throw new IllegalStateException("User is not a member of this room");
-        }
 
         requireMember(room, user);
 

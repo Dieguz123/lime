@@ -21,7 +21,7 @@ public class UserController {
         this.service = service;
     }
 
-    @GetMapping("/{jwt}")
+    @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable @AuthenticationPrincipal Jwt jwt){
         return service.getUserById(CurrentUser.id(jwt))
                 .map(UserResponse::from)

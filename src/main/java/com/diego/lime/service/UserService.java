@@ -21,10 +21,10 @@ public class UserService {
     }
 
     public User register(String username, String rawPassword){
-        String normalized = username.trim().toLowerCase(Locale.ROOT);
+        String normalized = normalize(username);
 
         if (userRepository.existsByUsername(normalized)){
-            throw new IllegalStateException("Username already used!");
+            throw new IllegalStateException("Username already taken");
         }
         String hash = passwordEncoder.encode(rawPassword);
         User user = new User(normalized, hash);

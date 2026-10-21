@@ -8,8 +8,6 @@ import com.diego.lime.repository.RoomRepository;
 import com.diego.lime.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class RoomService {
     private final RoomRepository roomRepository;

@@ -29,8 +29,8 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Film> getFilmById(@AuthenticationPrincipal Jwt jwt){
-         return service.getFilmById(CurrentUser.id(jwt))
+    public ResponseEntity<Film> getFilmById(@PathVariable Long id){
+         return service.getFilmById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound()
                                         .build());

@@ -2,11 +2,9 @@ package com.diego.lime.controller;
 
 
 import com.diego.lime.config.CurrentUser;
-import com.diego.lime.dto.CreateRoomRequest;
-import com.diego.lime.dto.JoinRoomRequest;
+import com.diego.lime.dto.RoomResponse;
 import com.diego.lime.model.Room;
 import com.diego.lime.service.RoomService;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,22 +22,20 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<Room> createRoom(@AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<RoomResponse> createRoom(@AuthenticationPrincipal Jwt jwt) {
         Room created = roomService.createRoom(CurrentUser.id(jwt));
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        return ResponseEntity.status(HttpStatus.CREATED).body(RoomResponse.from(created));
     }
 
     @GetMapping("/{code}")
-    public ResponseEntity<Room> getRoomByCode(@PathVariable String code, @AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<RoomResponse> getRoomByCode(@PathVariable String code, @AuthenticationPrincipal Jwt jwt) {
         Room room =  roomService.getRoomByCode(code, CurrentUser.id(jwt));
-        return ResponseEntity.ok(room);
+        return ResponseEntity.ok(RoomResponse.from(room));
     }
 
     @PostMapping("/{code}/join")
-    public ResponseEntity<Room> joinRoom (@PathVariable String code,@AuthenticationPrincipal Jwt jwt){
+    public ResponseEntity<RoomResponse> joinRoom (@PathVariable String code,@AuthenticationPrincipal Jwt jwt){
         Room room = roomService.joinRoom(code, CurrentUser.id(jwt));
-        return ResponseEntity.ok(room);
+        return ResponseEntity.ok(RoomResponse.from(room));
     }
-
-
 }
