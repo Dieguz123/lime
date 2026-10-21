@@ -1,5 +1,6 @@
 package com.diego.lime.service;
 
+import com.diego.lime.exception.ForbiddenException;
 import com.diego.lime.exception.NotFoundException;
 import com.diego.lime.model.Room;
 import com.diego.lime.model.User;
@@ -27,9 +28,21 @@ public class RoomService {
         return roomRepository.save(room);
     }
 
-    public Optional<Room> getRoomByCode(String inviteCode){
-        return roomRepository.findByInviteCode(inviteCode);
+    public Room getRoomByCode(String inviteCode, Long userId){
+
+        Room room = roomRepository.findByInviteCode(inviteCode)
+                .orElseThrow(() -> new NotFoundException("Room not found"));
+        User user = findUser(userId);
+
+        if (!room.isMember(user)){
+            throw new ForbiddenException("You are not part of this room");
+        }
+
+        return room;
     }
+
+
+
 
     public Room joinRoom(String inviteCode, Long userId) {
         Room room = roomRepository.findByInviteCode(inviteCode)

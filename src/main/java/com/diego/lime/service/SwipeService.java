@@ -1,5 +1,6 @@
 package com.diego.lime.service;
 
+import com.diego.lime.exception.ForbiddenException;
 import com.diego.lime.exception.NotFoundException;
 import com.diego.lime.model.Film;
 import com.diego.lime.model.Room;
@@ -39,11 +40,13 @@ public class SwipeService {
                 .orElseThrow(() -> new NotFoundException("Film not found"));
 
         if (!room.isMember(user)){
-            throw new IllegalStateException("User is not a member of this room");
+            throw new ForbiddenException("User is not a member of this room");
         }
         if (swipeRepository.existsByRoomAndUserAndFilm(room, user, film)){
             throw new IllegalStateException("Film already voted");
         }
+
+        requireMember(room,user);
 
         swipeRepository.save(new Swipe(room, user, film , liked));
 
@@ -63,13 +66,16 @@ public class SwipeService {
             throw new IllegalStateException("User is not a member of this room");
         }
 
+        requireMember(room, user);
+
         return filmRepository.findNotSwipedByUserInRoom(room, user)
                 .stream()
                 .findFirst();
     }
 
-    public List<Film> getMatches(String inviteCode){
+    public List<Film> getMatches(String inviteCode, Long userId){
         Room room = findRoom(inviteCode);
+        requireMember(room, findUser(userId));
         return swipeRepository.findMatchedFilms(room);
     }
 
@@ -81,5 +87,11 @@ public class SwipeService {
     private User findUser(Long userId){
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found"));
+    }
+
+    private void requireMember(Room room, User user){
+        if (!room.isMember(user)){
+            throw new ForbiddenException("You are not a member of this room");
+        }
     }
 }

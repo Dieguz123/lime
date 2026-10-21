@@ -1,6 +1,9 @@
 package com.diego.lime.controller;
 
+import com.diego.lime.config.CurrentUser;
 import com.diego.lime.model.Film;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,8 +29,8 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Film> getFilmById(@PathVariable Long id){
-         return service.getFilmById(id)
+    public ResponseEntity<Film> getFilmById(@AuthenticationPrincipal Jwt jwt){
+         return service.getFilmById(CurrentUser.id(jwt))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound()
                                         .build());
