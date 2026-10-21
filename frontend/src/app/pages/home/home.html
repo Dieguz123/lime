@@ -1,37 +1,50 @@
 <section class="home">
-  <input class="tab-radio" type="radio" name="home-tab" id="tab-create" checked />
-  <input class="tab-radio" type="radio" name="home-tab" id="tab-join" />
+  <header class="greeting">
+    <div class="greeting-text">
+      <p class="eyebrow">Welcome back</p>
+      <h2>{{ auth.user()?.username }}</h2>
+    </div>
+    <button class="btn btn-small btn-ghost" type="button" (click)="logout()">Log out</button>
+  </header>
 
-  <div class="tabs">
-    <label class="tab" for="tab-create">Create a room</label>
-    <label class="tab" for="tab-join">Join a room</label>
+  <div class="block">
+    <h3 class="block-title">Your rooms</h3>
+
+    @if (loading()) {
+      <p class="muted">Loading...</p>
+    } @else {
+      <ul class="room-list">
+        @for (room of rooms(); track room.inviteCode) {
+          <li>
+            <a class="room-card" [routerLink]="['/room', room.inviteCode]">
+              <span class="room-code">{{ room.inviteCode }}</span>
+              <span class="room-partner">
+                @if (otherMember(room); as name) {
+                  with <strong>{{ name }}</strong>
+                } @else {
+                  Waiting for your partner...
+                }
+              </span>
+              <span class="room-arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+        } @empty {
+          <li class="empty">No rooms yet. Create one and send the code to your partner.</li>
+        }
+      </ul>
+    }
   </div>
 
-  <div class="panel panel-create">
-    <label class="field">
-      Your name
-      <input class="input" [(ngModel)]="username" placeholder="Diego" maxlength="30" />
-    </label>
+  <div class="block">
+    <h3 class="block-title">New room</h3>
+    <button class="btn btn-block" type="button" (click)="createRoom()">Create a room</button>
 
-    <button class="btn btn-block" (click)="createRoom()" [disabled]="!username.trim()">
-      Create a room
-    </button>
-  </div>
-
-  <div class="panel panel-join">
-    <label class="field">
-      Your name
-      <input class="input" [(ngModel)]="username" placeholder="Diego" maxlength="30" />
-    </label>
-
-    <label class="field">
-      Invite code
-      <input class="input code-input" [(ngModel)]="code" placeholder="ABC123" maxlength="6" />
-    </label>
-
-    <button class="btn btn-block" (click)="joinRoom()" [disabled]="!username.trim() || code.length !== 6">
-      Join
-    </button>
+    <form class="join" (ngSubmit)="joinRoom()">
+      <input class="input code-input" name="code" [(ngModel)]="code"
+             placeholder="ABC123" maxlength="6" autocapitalize="characters"
+             aria-label="Invite code" />
+      <button class="btn" type="submit" [disabled]="code.length !== 6">Join</button>
+    </form>
   </div>
 
   @if (error()) {

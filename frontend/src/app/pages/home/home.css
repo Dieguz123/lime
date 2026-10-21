@@ -1,70 +1,130 @@
 .home {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
 }
 
-/* Tab: i radio sono nascosti ma restano usabili da tastiera */
-.tab-radio {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.tabs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4px;
-  padding: 4px;
-  border-radius: var(--radius);
-  background: var(--surface);
-  border: 1px solid var(--border);
-}
-
-.tab {
+.greeting {
   display: flex;
   align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  border-radius: 10px;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.greeting-text {
+  min-width: 0;
+}
+
+.eyebrow {
+  margin: 0;
   color: var(--text-muted);
+  font-size: 0.8125rem;
   font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.15s, color 0.15s;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
-#tab-create:checked ~ .tabs [for="tab-create"],
-#tab-join:checked ~ .tabs [for="tab-join"] {
-  background: var(--lime);
-  color: var(--lime-ink);
+.greeting h2 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  overflow-wrap: anywhere;
 }
 
-#tab-create:focus-visible ~ .tabs [for="tab-create"],
-#tab-join:focus-visible ~ .tabs [for="tab-join"] {
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.block-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.muted,
+.empty {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.room-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.room-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.15s, transform 0.1s;
+}
+
+.room-card:hover {
+  border-color: var(--lime);
+}
+
+.room-card:active {
+  transform: scale(0.98);
+}
+
+.room-card:focus-visible {
   outline: 3px solid var(--lime);
   outline-offset: 2px;
 }
 
-.panel {
-  display: none;
-  flex-direction: column;
-  gap: 14px;
-  padding: 20px;
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  border: 1px solid var(--border);
+.room-code {
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: var(--lime-tint);
+  color: var(--lime);
+  font-family: ui-monospace, Consolas, monospace;
+  font-weight: 700;
+  letter-spacing: 0.12em;
 }
 
-#tab-create:checked ~ .panel-create,
-#tab-join:checked ~ .panel-join {
-  display: flex;
+.room-partner {
+  min-width: 0;
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
 }
 
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-weight: 600;
+.room-partner strong {
+  color: var(--text);
+}
+
+.room-arrow {
+  color: var(--lime);
+  font-weight: 700;
+}
+
+.join {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  margin: 0;
 }
 
 .code-input {
