@@ -34,11 +34,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<String> handleDataIntegrity(DataIntegrityViolationException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body("Data conflict, try again");
-    }
-
     public Optional<User> getUserById(Long id){
         return userRepository.findById(id);
     }

@@ -54,3 +54,13 @@ GET http://localhost:8080/api/rooms/{{code}}/next-film?userId=2
 
 ### 11. Matches in the room → film 1
 GET http://localhost:8080/api/rooms/{{code}}/matches
+
+
+### Register
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "Diego",
+  "password": "lime-password"
+}

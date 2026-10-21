@@ -37,8 +37,8 @@ class SwipeServiceTest {
 
     @BeforeEach
     void setUp() {
-        diego = userService.createUser("Diego");
-        anna = userService.createUser("Anna");
+        diego = userService.register("Diego", "password123");
+        anna = userService.register("Anna", "Anna");
 
         Room room = roomService.createRoom(diego.getId());
         code = room.getInviteCode();
@@ -91,7 +91,7 @@ class SwipeServiceTest {
 
     @Test
     void swipe_userNotInRoom_throws() {
-        User marco = userService.createUser("Marco");
+        User marco = userService.register("Marco", "1234567890");
         assertThrows(IllegalStateException.class,
                 () -> swipeService.swipe(code, marco.getId(), inception.getId(), true));
     }
