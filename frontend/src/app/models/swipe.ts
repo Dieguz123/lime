@@ -1,5 +1,4 @@
 export interface SwipeRequest {
-  userId: number;
   filmId: number;
   liked: boolean
 }
