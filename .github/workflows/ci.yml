@@ -48,3 +48,20 @@ jobs:
 
       - name: Build
         run: npx ng build
+
+  deploy:
+    needs: [ build, frontend ]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    concurrency: deploy
+
+    steps:
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          echo "${{ secrets.DEPLOY_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+
+      - name: Deploy to EC2
+        run: ssh -T -i ~/.ssh/deploy_key ubuntu@${{ secrets.DEPLOY_HOST }}
