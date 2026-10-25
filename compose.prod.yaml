@@ -1,0 +1,51 @@
+services:
+  postgres:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: lime
+      POSTGRES_USER: lime
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - lime-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lime -d lime"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    mem_limit: 384m
+
+  backend:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_URL: jdbc:postgresql://postgres:5432/lime
+      DB_USER: lime
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      TMDB_TOKEN: ${TMDB_TOKEN}
+    mem_limit: 768m
+
+  web:
+    build: ./frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  lime-data:
+  caddy-data:
+  caddy-config:
