@@ -25,3 +25,24 @@ Since the frontend and the API are served from the same domain, the browser neve
 cross-origin requests, so no CORS configuration is needed in production.
 
 The domain is registered on Cloudflare, where an `A` record points to the instance's Elastic IP.
+### Continuous deployment
+
+Every push to `main` goes through GitHub Actions:
+
+1. **build** and **frontend** run in parallel: the backend is built and tested with Gradle,
+   and the Angular app is built for production.
+2. Only if both succeed, **deploy** connects to the server over SSH.
+3. The server pulls the latest code and runs `docker compose up -d --build`:
+   Docker rebuilds only the images that changed and restarts only those containers.
+   The database data lives in a volume, so it is kept between deploys.
+
+If a test fails, the deploy doesn't run and the previous version stays online.
+
+The SSH key used by GitHub is restricted on the server with a forced command in `authorized_keys`:
+it can only run the deploy command, so even a leaked key couldn't be used to open a shell.
+
+### Secrets
+
+No secret is stored in the repository. On the server, the database password, the JWT secret
+and the TMDB token live in a `.env` file read by Docker Compose, and the app runs with the
+`prod` Spring profile, which has no default values: if a secret is missing, the app refuses to start.
