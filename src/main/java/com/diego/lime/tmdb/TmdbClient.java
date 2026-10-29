@@ -31,4 +31,16 @@ public class TmdbClient {
 
         return response != null ? response.results() : List.of();
     }
+
+    public List<TmdbGenre> getGenres(){
+        TmdbGenreList response = restClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/genre/movie/list")
+                        .queryParam("language", "it-IT")
+                        .build())
+                .retrieve()
+                .body(TmdbGenreList.class);
+
+        return response != null ? response.genres() : List.of();
+    }
 }
