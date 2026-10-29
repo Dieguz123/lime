@@ -49,7 +49,7 @@ public class TmdbImporter implements CommandLineRunner {
 
     private Film toFilm (TmdbMovie movie){
         Integer releaseYear = parseYear(movie.releaseDate());
-        return new Film(movie.title(), releaseYear, null, null, movie.id(), movie.overview(), movie.posterPath());
+        return new Film(movie.title(), releaseYear, null, movie.id(), movie.overview(), movie.posterPath());
     }
 
     private Integer parseYear(String releaseDate){

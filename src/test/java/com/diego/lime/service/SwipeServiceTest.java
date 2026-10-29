@@ -45,7 +45,7 @@ class SwipeServiceTest {
         code = room.getInviteCode();
         roomService.joinRoom(code, anna.getId());
 
-        inception = filmRepository.save(new Film("Inception", 2010, "Prime", "Sci-Fi", 1L, null, null));
+        inception = filmRepository.save(new Film("Inception", 2010, "Prime", 1L, null, null));
     }
 
     @Test
