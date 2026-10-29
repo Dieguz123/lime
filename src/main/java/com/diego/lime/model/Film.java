@@ -64,6 +64,9 @@ public class Film {
 
     public String getPosterPath() { return posterPath; }
 
+    public Set<Genre> getGenres() {
+        return genres;
+    }
     public void setGenres(Set<Genre> genres) {
         this.genres = genres;
     }
