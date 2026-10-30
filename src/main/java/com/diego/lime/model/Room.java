@@ -3,6 +3,9 @@ package com.diego.lime.model;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name="rooms")
 public class Room {
@@ -21,6 +24,14 @@ public class Room {
     @ManyToOne
     @JoinColumn(name = "partner_id")
     private User partner;
+
+    @ManyToMany
+    @JoinTable(
+            name = "room_providers",
+            joinColumns = @JoinColumn(name = "room_id"),
+            inverseJoinColumns = @JoinColumn(name = "provider_id")
+    )
+    private Set<Provider> providers = new HashSet<>();
 
     protected Room() {}
 
@@ -62,5 +73,13 @@ public class Room {
 
     public User getPartner() {
         return partner;
+    }
+
+    public Set<Provider> getProviders() {
+        return providers;
+    }
+
+    public void setProviders(Set<Provider> providers) {
+        this.providers = providers;
     }
 }
