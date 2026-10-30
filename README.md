@@ -63,7 +63,7 @@ export TMDB_TOKEN=your-token
 ```
 
 On Windows PowerShell use `$env:TMDB_TOKEN="your-token"` instead of `export`.
-The API starts on `http://localhost:8080` and imports the most popular movies from TMDB on startup.
+The API starts on `http://localhost:8080` and imports the most popular movies available on a subscription in Italy from TMDB on startup.
 
 ### 3. Frontend
 
@@ -87,7 +87,9 @@ No database or TMDB token is needed: the tests run on their own.
   The tables are created by the same Flyway migrations used in production, with Hibernate in `validate` mode,
   so a broken migration fails the tests before it reaches the server.
   Every test runs in a transaction that is rolled back at the end (`@Transactional`), so each one starts from clean data.
-  They cover registration and login, rooms, swipes, matches and the access rules for non-members.
+  They cover registration and login, rooms, swipes, matches, the streaming platform filter and the access rules for non-members.
+- **Room platforms API test** (`@SpringBootTest` with `MockMvc`) sends real requests through the security filters.
+  It isn't `@Transactional`, because an open test transaction would hide lazy loading errors.
 - **TMDB client test**: a plain unit test that binds a `MockRestServiceServer` to the `RestClient`,
   so the TMDB response is simulated and no real HTTP call is made.
 
@@ -114,12 +116,13 @@ A user who isn't a member of the room gets `403 Forbidden`.
 
 | Method | Path | Description |
 |---|---|---|
-| POST | `/api/rooms` | Creates a room with an invite code, `201 Created` |
+| POST | `/api/rooms` | Creates a room with an invite code and its streaming platforms (`providerIds`, can be empty), `201 Created`, `404 Not Found` if a platform doesn't exist |
 | GET | `/api/rooms/mine` | Returns the rooms of the logged-in user |
 | GET | `/api/rooms/{code}` | Returns the room, `404 Not Found` if it doesn't exist |
 | POST | `/api/rooms/{code}/join` | Joins the room, `404 Not Found` if it doesn't exist, `409 Conflict` if it's full or you're already in it |
+| PUT | `/api/rooms/{code}/providers` | Replaces the streaming platforms of the room (`providerIds`, can be empty), `404 Not Found` if the room or a platform doesn't exist |
 | POST | `/api/rooms/{code}/swipes` | Votes a movie (`filmId`, `liked`) and returns whether it's a match, `409 Conflict` if already voted |
-| GET | `/api/rooms/{code}/next-film` | Returns the next movie to vote, `204 No Content` if there are none left |
+| GET | `/api/rooms/{code}/next-film` | Returns the next movie to vote, on at least one of the room's platforms if it has any, `204 No Content` if there are none left |
 | GET | `/api/rooms/{code}/matches` | Returns the movies both members liked |
 
 ### Movies and health
@@ -128,6 +131,7 @@ A user who isn't a member of the room gets `403 Forbidden`.
 |---|---|---|
 | GET | `/api/films` | Returns all the movies |
 | GET | `/api/films/{id}` | Returns a movie, or `404 Not Found` |
+| GET | `/api/providers` | Returns all the streaming platforms, sorted by name |
 | GET | `/api/health` | **Public.** Returns `OK`, used to check that the backend is up |
 
 ## Project structure
@@ -143,7 +147,7 @@ The code is organized in layers:
 - **dto**: request and response bodies. Entities are never returned directly, so for example password hashes never leave the server
 - **exception**: custom exceptions and a global handler that turns them into status codes (401, 403, 404, 409)
 - **config**: security (JWT, BCrypt and access rules), the helper that reads the current user from the token, and CORS for local development
-- **tmdb**: the TMDB client, its DTOs and the importer that loads the popular movies on startup
+- **tmdb**: the TMDB client, its DTOs and the importer that loads the popular subscription movies on startup
 
 The database schema is managed by Flyway, with the migrations in `src/main/resources/db/migration`.
 
@@ -152,6 +156,7 @@ The database schema is managed by Flyway, with the migrations in `src/main/resou
 The Angular app lives in the `frontend` folder:
 
 - **pages**: `login` (sign up and log in), `home` (your rooms, create or join one), `swipe` (vote the movies, tap a card to read the plot) and `matches`
+- **components**: `provider-picker`, the list of streaming platforms with their logos, used in `home` and `swipe`
 - **services**: one per area of the API, plus `AuthService`, which handles login and stores the JWT
 - **auth interceptor**: adds the token to every request, and sends you back to the login page if it has expired
 - **auth guard**: protects the pages that need you to be logged in
@@ -166,5 +171,6 @@ The Angular app lives in the `frontend` folder:
 - [x] Deploy on AWS with automatic HTTPS and CI/CD
 - [ ] Installable PWA
 - [ ] Real-time match notifications (WebSocket)
-- [ ] Filters by genre, year and streaming platform
+- [x] Filter by streaming platform
+- [ ] Filters by genre and year
 - [ ] Integration tests on a real PostgreSQL with Testcontainers
