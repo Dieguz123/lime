@@ -6,6 +6,36 @@
     <button class="btn btn-small" (click)="copyCode()">Copy</button>
   </p>
 
+  <div class="platforms">
+    <div class="platforms-summary">
+      @for (provider of roomProviders(); track provider.id) {
+        @if (provider.logoPath) {
+          <img class="provider-logo"
+               [src]="logoBaseUrl + provider.logoPath"
+               [alt]="provider.name"
+               [title]="provider.name" />
+        } @else {
+          <p class="badge">{{ provider.name }}</p>
+        }
+      } @empty {
+        <span class="invite-label">All platforms</span>
+      }
+      <button class="btn btn-small" type="button" (click)="toggleEditProviders()">
+        {{ editingProviders() ? 'Cancel' : 'Edit' }}
+      </button>
+    </div>
+
+    @if (editingProviders()) {
+      <app-provider-picker [providers]="allProviders()" [(selected)]="selectedProviders" />
+      <button class="btn btn-block" type="button"
+              (click)="saveProviders()"
+              [disabled]="savingProviders() || voting()">Save platforms</button>
+      @if (providersError()) {
+        <p class="platforms-error">{{ providersError() }}</p>
+      }
+    }
+  </div>
+
   @if (loading()) {
     <p class="status">Loading...</p>
   } @else {
@@ -60,9 +90,11 @@
       }
 
       <div class="actions">
-        <button class="vote no" (click)="vote(false)" [disabled]="voting()" aria-label="No">🚫</button>
-        <button class="vote yes" (click)="vote(true)" [disabled]="voting()" aria-label="Yes">❤️</button>
+        <button class="vote no" (click)="vote(false)" [disabled]="voting() || savingProviders()" aria-label="No">🚫</button>
+        <button class="vote yes" (click)="vote(true)" [disabled]="voting() || savingProviders()" aria-label="Yes">❤️</button>
       </div>
+    } @else if (roomProviders().length) {
+      <p class="status">No more films on your platforms! 🍿</p>
     } @else {
       <p class="status">You've seen all the films! 🍿</p>
     }
