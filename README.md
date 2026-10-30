@@ -116,7 +116,7 @@ A user who isn't a member of the room gets `403 Forbidden`.
 
 | Method | Path | Description |
 |---|---|---|
-| POST | `/api/rooms` | Creates a room with an invite code and its streaming platforms (`providerIds`, can be empty), `201 Created`, `404 Not Found` if a platform doesn't exist |
+| POST | `/api/rooms` | Creates a room with a `name` (up to 50 characters), an invite code and its streaming platforms (`providerIds`, can be empty), `201 Created`, `400` if the data isn't valid, `404 Not Found` if a platform doesn't exist |
 | GET | `/api/rooms/mine` | Returns the rooms of the logged-in user |
 | GET | `/api/rooms/{code}` | Returns the room, `404 Not Found` if it doesn't exist |
 | POST | `/api/rooms/{code}/join` | Joins the room, `404 Not Found` if it doesn't exist, `409 Conflict` if it's full or you're already in it |
@@ -155,8 +155,8 @@ The database schema is managed by Flyway, with the migrations in `src/main/resou
 
 The Angular app lives in the `frontend` folder:
 
-- **pages**: `login` (sign up and log in), `home` (your rooms, create or join one), `swipe` (vote the movies, tap a card to read the plot) and `matches`
-- **components**: `provider-picker`, the list of streaming platforms with their logos, used in `home` and `swipe`
+- **pages**: `login` (sign up and log in), `home` (your rooms, join one), `create-room` (name and streaming platforms of a new room), `swipe` (vote the movies, tap a card to read the plot) and `matches`
+- **components**: `provider-picker`, the list of streaming platforms with their logos, used in `create-room` and `swipe`
 - **services**: one per area of the API, plus `AuthService`, which handles login and stores the JWT
 - **auth interceptor**: adds the token to every request, and sends you back to the login page if it has expired
 - **auth guard**: protects the pages that need you to be logged in
