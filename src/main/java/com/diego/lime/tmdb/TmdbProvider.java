@@ -5,6 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record TmdbProvider(
         @JsonProperty("provider_id") Long id,
         @JsonProperty("provider_name") String name,
-        @JsonProperty("provider_path") String logoPath
+        @JsonProperty("logo_path") String logoPath
 ) {
 }
