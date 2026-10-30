@@ -14,7 +14,6 @@ public class Film {
     private Long id;
     private String name;
     private Integer releaseYear;
-    private String platform;
     @Column(unique = true)
     private Long tmdbId;
     @Column(length = 2000)
@@ -30,13 +29,20 @@ public class Film {
     )
     private Set<Genre> genres = new HashSet<>();
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "film_providers",
+            joinColumns = @JoinColumn(name = "film_id"),
+            inverseJoinColumns = @JoinColumn(name = "provider_id")
+    )
+    private Set<Provider> providers = new HashSet<>();
+
     protected Film() {
     }
 
-    public Film(String name, Integer releaseYear, String platform, Long tmdbId, String overview, String posterPath) {
+    public Film(String name, Integer releaseYear, Long tmdbId, String overview, String posterPath) {
         this.name = name;
         this.releaseYear = releaseYear;
-        this.platform = platform;
         this.tmdbId = tmdbId;
         this.overview = overview;
         this.posterPath = posterPath;
@@ -54,10 +60,6 @@ public class Film {
         return releaseYear;
     }
 
-    public String getPlatform() {
-        return platform;
-    }
-
     public Long getTmdbId() { return tmdbId; }
 
     public String getOverview() { return overview; }
@@ -67,7 +69,17 @@ public class Film {
     public Set<Genre> getGenres() {
         return genres;
     }
+
     public void setGenres(Set<Genre> genres) {
         this.genres = genres;
     }
+
+    public Set<Provider> getProviders() {
+        return providers;
+    }
+
+    public void setProviders(Set<Provider> providers) {
+        this.providers = providers;
+    }
+
 }

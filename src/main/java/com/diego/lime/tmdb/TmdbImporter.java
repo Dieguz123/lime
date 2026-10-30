@@ -3,10 +3,12 @@ package com.diego.lime.tmdb;
 
 import com.diego.lime.model.Film;
 import com.diego.lime.model.Genre;
+import com.diego.lime.model.Provider;
 import com.diego.lime.repository.FilmRepository;
 import com.diego.lime.repository.GenreRepository;
-import org.slf4j.LoggerFactory;
+import com.diego.lime.repository.ProviderRepository;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -29,11 +31,13 @@ public class TmdbImporter implements CommandLineRunner {
     private final TmdbClient tmdbClient;
     private final FilmRepository filmRepository;
     private final GenreRepository genreRepository;
+    private final ProviderRepository providerRepository;
 
-    public TmdbImporter(TmdbClient tmdbClient, FilmRepository filmRepository, GenreRepository genreRepository){
+    public TmdbImporter(TmdbClient tmdbClient, FilmRepository filmRepository, GenreRepository genreRepository, ProviderRepository providerRepository){
         this.tmdbClient = tmdbClient;
         this.filmRepository = filmRepository;
         this.genreRepository = genreRepository;
+        this.providerRepository = providerRepository;
     }
 
     @Override
@@ -45,23 +49,22 @@ public class TmdbImporter implements CommandLineRunner {
             int updated = 0;
             for (int page = 1; page <= PAGES; page++) {
                 for (TmdbMovie movie : tmdbClient.getPopularMovies(page)) {
-                    Set<Genre> genres = findGenres(movie);
                     Optional<Film> existing = filmRepository.findByTmdbId(movie.id());
-
+                    Film film;
                     if (existing.isPresent()) {
-                        Film film = existing.get();
-                        if (film.getGenres().isEmpty() && !genres.isEmpty()) {
-                            film.setGenres(genres);
-                            filmRepository.save(film);
-                            updated++;
+                        film = existing.get();
+                        if (film.getGenres().isEmpty()) {
+                            film.setGenres(findGenres(movie));
                         }
-                        continue;
+                        updated++;
+                    } else {
+                        film = toFilm(movie);
+                        film.setGenres(findGenres(movie));
+                        saved++;
                     }
 
-                    Film film = toFilm(movie);
-                    film.setGenres(genres);
+                    film.setProviders(fetchProviders(movie.id()));
                     filmRepository.save(film);
-                    saved++;
                 }
             }
             log.info("Imported {} new films and added genres to {} existing films", saved, updated);
@@ -87,7 +90,7 @@ public class TmdbImporter implements CommandLineRunner {
 
     private Film toFilm (TmdbMovie movie){
         Integer releaseYear = parseYear(movie.releaseDate());
-        return new Film(movie.title(), releaseYear, null, movie.id(), movie.overview(), movie.posterPath());
+        return new Film(movie.title(), releaseYear, movie.id(), movie.overview(), movie.posterPath());
     }
 
     private Integer parseYear(String releaseDate){
@@ -99,5 +102,12 @@ public class TmdbImporter implements CommandLineRunner {
         }catch (DateTimeParseException e){
             return null;
         }
+    }
+
+    private Set<Provider> fetchProviders(Long tmdbId) {
+        List<Provider> providers = tmdbClient.getWatchProviders(tmdbId).stream()
+                .map(provider -> new Provider(provider.id(), provider.name(), provider.logoPath()))
+                .toList();
+        return new HashSet<>(providerRepository.saveAll(providers));
     }
 }

@@ -29,9 +29,9 @@ class FilmServiceTest {
     void returnFilmsGetAll(){
         repository.deleteAll();
 
-        repository.save(new Film("Inception", 2010, "Prime",  1L, null, null));
-        repository.save(new Film("Star Trek", 2010, "Prime", 2L, null, null));
-        repository.save(new Film("Interstellar", 2010, "Prime", 3L , null, null));
+        repository.save(new Film("Inception", 2010,   1L, null, null));
+        repository.save(new Film("Star Trek", 2010, 2L, null, null));
+        repository.save(new Film("Interstellar", 2010,  3L , null, null));
 
 
         List<Film> films = service.getAllFilms();
@@ -42,7 +42,7 @@ class FilmServiceTest {
     @Test
     void returnFilmByIdFounded(){
 
-        Film salvato = repository.save(new Film("Inception", 2010, "Prime", 1L , null, null));
+        Film salvato = repository.save(new Film("Inception", 2010,  1L , null, null));
 
         Optional<Film> risultato = service.getFilmById(salvato.getId());
 

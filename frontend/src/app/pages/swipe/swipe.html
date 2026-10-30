@@ -43,14 +43,21 @@
           @if (film.releaseYear != null) {
             <p class="badge">{{ film.releaseYear }}</p>
           }
-          @if (film.platform) {
-            <p class="badge platform">{{ film.platform }}</p>
-          }
           @for (genre of film.genres; track genre.id) {
             <p class = "badge"> {{ genre.name }}</p>
           }
         </div>
       </div>
+      @if (film.providers.length) {
+        <div class="providers">
+          @for (provider of film.providers; track provider.id) {
+            <img class="provider-logo"
+                 [src]="'https://image.tmdb.org/t/p/w92' + provider.logoPath"
+                 [alt]="provider.name"
+                 [title]="provider.name" />
+          }
+        </div>
+      }
 
       <div class="actions">
         <button class="vote no" (click)="vote(false)" [disabled]="voting()" aria-label="No">🚫</button>

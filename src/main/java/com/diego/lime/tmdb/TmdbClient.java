@@ -43,4 +43,20 @@ public class TmdbClient {
 
         return response != null ? response.genres() : List.of();
     }
+
+    public List<TmdbProvider> getWatchProviders(Long movieId) {
+        TmdbWatchProviders response = restClient.get()
+                .uri("/movie/{id}/watch/providers", movieId)
+                .retrieve()
+                .body(TmdbWatchProviders.class);
+
+        if (response == null || response.results() == null) {
+            return List.of();
+        }
+        TmdbCountryProviders italy = response.results().get("IT");
+        if (italy == null || italy.flatrate() == null) {
+            return List.of();
+        }
+        return italy.flatrate();
+    }
 }
