@@ -60,9 +60,7 @@ public class SwipeService {
 
         requireMember(room, user);
 
-        return filmRepository.findNotSwipedByUserInRoom(room, user)
-                .stream()
-                .findFirst();
+        return filmRepository.findNextForUserInRoom(room, user);
     }
 
     public List<Film> getMatches(String inviteCode, Long userId){
