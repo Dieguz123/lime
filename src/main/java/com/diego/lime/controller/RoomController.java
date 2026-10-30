@@ -2,9 +2,11 @@ package com.diego.lime.controller;
 
 
 import com.diego.lime.config.CurrentUser;
+import com.diego.lime.dto.RoomProvidersRequest;
 import com.diego.lime.dto.RoomResponse;
 import com.diego.lime.model.Room;
 import com.diego.lime.service.RoomService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,8 +26,8 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<RoomResponse> createRoom(@AuthenticationPrincipal Jwt jwt) {
-        Room created = roomService.createRoom(CurrentUser.id(jwt));
+    public ResponseEntity<RoomResponse> createRoom(@Valid @RequestBody RoomProvidersRequest request, @AuthenticationPrincipal Jwt jwt) {
+        Room created = roomService.createRoom(CurrentUser.id(jwt), request.providerIds());
         return ResponseEntity.status(HttpStatus.CREATED).body(RoomResponse.from(created));
     }
 
@@ -38,6 +40,12 @@ public class RoomController {
     @PostMapping("/{code}/join")
     public ResponseEntity<RoomResponse> joinRoom (@PathVariable String code,@AuthenticationPrincipal Jwt jwt){
         Room room = roomService.joinRoom(code, CurrentUser.id(jwt));
+        return ResponseEntity.ok(RoomResponse.from(room));
+    }
+
+    @PutMapping("/{code}/providers")
+    public ResponseEntity<RoomResponse> updateProviders(@PathVariable String code, @Valid @RequestBody RoomProvidersRequest request, @AuthenticationPrincipal Jwt jwt){
+        Room room = roomService.updateProviders(code, CurrentUser.id(jwt), request.providerIds());
         return ResponseEntity.ok(RoomResponse.from(room));
     }
 

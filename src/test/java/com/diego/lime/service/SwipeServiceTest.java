@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,7 +42,7 @@ class SwipeServiceTest {
         diego = userService.register("Diego", "password123");
         anna = userService.register("Anna", "Anna");
 
-        Room room = roomService.createRoom(diego.getId());
+        Room room = roomService.createRoom(diego.getId(), Set.of());
         code = room.getInviteCode();
         roomService.joinRoom(code, anna.getId());
 
