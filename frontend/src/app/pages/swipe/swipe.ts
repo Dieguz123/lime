@@ -21,6 +21,7 @@ export class Swipe implements OnInit {
 
   code = this.route.snapshot.paramMap.get('code')!;
 
+  roomName = signal('');
   roomProviders = signal<Provider[]>([]);
   allProviders = signal<Provider[]>([]);
   selectedProviders = signal<number[]>([]);
@@ -39,7 +40,10 @@ export class Swipe implements OnInit {
 
   ngOnInit(): void {
     this.loadNext();
-    this.roomService.get(this.code).subscribe(room => this.roomProviders.set(room.providers));
+    this.roomService.get(this.code).subscribe(room => {
+      this.roomName.set(room.name);
+      this.roomProviders.set(room.providers);
+    });
     this.providerService.getAll().subscribe(providers => this.allProviders.set(providers));
   }
 

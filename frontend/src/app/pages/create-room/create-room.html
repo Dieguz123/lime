@@ -1,0 +1,27 @@
+<section class="create-room">
+  <a class="link back" routerLink="/">← Your rooms</a>
+
+  <h2>New room</h2>
+
+  <form class="form" (ngSubmit)="createRoom()">
+    <label class="field">
+      <span class="label">Room name</span>
+      <input class="input" name="name" [(ngModel)]="name"
+             placeholder="Friday movie night" maxlength="50" autocomplete="off" />
+    </label>
+
+    @if (providers().length) {
+      <div class="field">
+        <span class="label">Streaming platforms</span>
+        <p class="hint">Pick the ones you have, or none to see every film.</p>
+        <app-provider-picker [providers]="providers()" [(selected)]="selectedProviders" />
+      </div>
+    }
+
+    <button class="btn btn-block" type="submit" [disabled]="!name().trim() || creating()">Create room</button>
+  </form>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+</section>

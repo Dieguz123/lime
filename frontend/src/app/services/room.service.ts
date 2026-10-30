@@ -9,8 +9,8 @@ export class RoomService {
   private http = inject(HttpClient);
   private apiUrl = `${API_URL}/rooms`;
 
-  create(providerIds: number[]): Observable<Room> {
-    return this.http.post<Room>(this.apiUrl, {providerIds});
+  create(name: string, providerIds: number[]): Observable<Room> {
+    return this.http.post<Room>(this.apiUrl, {name, providerIds});
   }
 
   get(code: string): Observable<Room> {

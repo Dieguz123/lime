@@ -18,12 +18,15 @@
           <li>
             <a class="room-card" [routerLink]="['/room', room.inviteCode]">
               <span class="room-code">{{ room.inviteCode }}</span>
-              <span class="room-partner">
-                @if (otherMember(room); as name) {
-                  with <strong>{{ name }}</strong>
-                } @else {
-                  Waiting for your partner...
-                }
+              <span class="room-info">
+                <strong class="room-name">{{ room.name }}</strong>
+                <span class="room-partner">
+                  @if (otherMember(room); as name) {
+                    with <strong>{{ name }}</strong>
+                  } @else {
+                    Waiting for your partner...
+                  }
+                </span>
               </span>
               <span class="room-arrow" aria-hidden="true">→</span>
             </a>
@@ -37,11 +40,7 @@
 
   <div class="block">
     <h3 class="block-title">New room</h3>
-    @if (providers().length) {
-      <p class="muted">Pick your streaming platforms, or none to see every film.</p>
-      <app-provider-picker [providers]="providers()" [(selected)]="selectedProviders" />
-    }
-    <button class="btn btn-block" type="button" (click)="createRoom()">Create a room</button>
+    <a class="btn btn-block create-link" routerLink="/rooms/new">Create a room</a>
 
     <form class="join" (ngSubmit)="joinRoom()">
       <input class="input code-input" name="code" [(ngModel)]="code"
