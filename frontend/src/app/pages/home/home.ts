@@ -44,13 +44,6 @@ export class Home implements OnInit {
       : room.creator.username;
   }
 
-  createRoom(): void {
-    this.roomService.create().subscribe({
-      next: room => this.router.navigate(['/room', room.inviteCode]),
-      error: () => this.error.set('Something went wrong, try again')
-    });
-  }
-
   joinRoom(): void {
     this.roomService.join(this.code.toUpperCase()).subscribe({
       next: room => this.router.navigate(['/room', room.inviteCode]),

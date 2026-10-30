@@ -1,0 +1,16 @@
+<ul class="provider-list">
+  @for (provider of providers(); track provider.id) {
+    <li>
+      <button class="provider"
+              type="button"
+              [class.selected]="isSelected(provider.id)"
+              [attr.aria-pressed]="isSelected(provider.id)"
+              (click)="toggle(provider.id)">
+        @if (provider.logoPath) {
+          <img class="provider-logo" [src]="logoBaseUrl + provider.logoPath" alt="" />
+        }
+        <span class="provider-name">{{ provider.name }}</span>
+      </button>
+    </li>
+  }
+</ul>

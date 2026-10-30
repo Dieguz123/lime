@@ -21,8 +21,9 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 class TmdbClientTest {
 
-    private static final String POPULAR_URL =
-            "https://api.test/3/movie/popular?language=it-IT&page=1";
+    private static final String DISCOVER_URL =
+            "https://api.test/3/discover/movie?language=it-IT&watch_region=IT"
+                    + "&with_watch_monetization_types=flatrate&sort_by=popularity.desc&page=1";
 
     private MockRestServiceServer server;
     private TmdbClient client;
@@ -35,7 +36,7 @@ class TmdbClientTest {
     }
 
     @Test
-    void getPopularMovies_parsesResponse() {
+    void getPopularSubscriptionMovies_parsesResponse() {
         String json = """
                 {
                   "page": 1,
@@ -54,12 +55,12 @@ class TmdbClientTest {
                 }
                 """;
 
-        server.expect(requestTo(POPULAR_URL))
+        server.expect(requestTo(DISCOVER_URL))
                 .andExpect(method(HttpMethod.GET))
                 .andExpect(header(HttpHeaders.AUTHORIZATION, "Bearer test-token"))
                 .andRespond(withSuccess(json, MediaType.APPLICATION_JSON));
 
-        List<TmdbMovie> movies = client.getPopularMovies(1);
+        List<TmdbMovie> movies = client.getPopularSubscriptionMovies(1);
 
         server.verify();
         assertEquals(1, movies.size());
@@ -74,12 +75,12 @@ class TmdbClientTest {
     }
 
     @Test
-    void getPopularMovies_invalidToken_throws() {
-        server.expect(requestTo(POPULAR_URL))
+    void getPopularSubscriptionMovies_invalidToken_throws() {
+        server.expect(requestTo(DISCOVER_URL))
                 .andRespond(withUnauthorizedRequest());
 
         assertThrows(HttpClientErrorException.Unauthorized.class,
-                () -> client.getPopularMovies(1));
+                () -> client.getPopularSubscriptionMovies(1));
     }
 
     @Test

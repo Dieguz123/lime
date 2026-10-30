@@ -26,7 +26,9 @@ import java.util.Set;
 @ConditionalOnProperty(name = "tmdb.import.enabled", havingValue = "true")
 public class TmdbImporter implements CommandLineRunner {
     private static final Logger log = LoggerFactory.getLogger(TmdbImporter.class);
-    private static final int PAGES = 5;
+    //20 films per page. Each one costs an extra call for its providers and the import
+    //runs on every startup, so a page is 21 requests and 10 pages are about 210.
+    private static final int PAGES = 10;
 
     private final TmdbClient tmdbClient;
     private final FilmRepository filmRepository;
@@ -48,7 +50,7 @@ public class TmdbImporter implements CommandLineRunner {
             int saved = 0;
             int updated = 0;
             for (int page = 1; page <= PAGES; page++) {
-                for (TmdbMovie movie : tmdbClient.getPopularMovies(page)) {
+                for (TmdbMovie movie : tmdbClient.getPopularSubscriptionMovies(page)) {
                     Optional<Film> existing = filmRepository.findByTmdbId(movie.id());
                     Film film;
                     if (existing.isPresent()) {
@@ -67,7 +69,7 @@ public class TmdbImporter implements CommandLineRunner {
                     filmRepository.save(film);
                 }
             }
-            log.info("Imported {} new films and added genres to {} existing films", saved, updated);
+            log.info("Imported {} new films and refreshed {} existing films", saved, updated);
         } catch (RestClientException e) {
             log.warn("TMDB import failed, starting with existing films: {}", e.getMessage());
         }

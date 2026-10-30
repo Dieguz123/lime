@@ -19,11 +19,14 @@ public class TmdbClient {
                 .build();
     }
 
-    public List<TmdbMovie> getPopularMovies( int page ){
+    public List<TmdbMovie> getPopularSubscriptionMovies( int page ){
         TmdbPage response = restClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/movie/popular")
+                        .path("/discover/movie")
                         .queryParam("language", "it-IT")
+                        .queryParam("watch_region", "IT")
+                        .queryParam("with_watch_monetization_types", "flatrate")
+                        .queryParam("sort_by", "popularity.desc")
                         .queryParam("page", page)
                         .build())
                 .retrieve()

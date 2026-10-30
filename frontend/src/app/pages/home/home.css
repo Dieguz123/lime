@@ -105,8 +105,21 @@
   letter-spacing: 0.12em;
 }
 
-.room-partner {
+.room-info {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.room-name {
+  overflow-wrap: anywhere;
+}
+
+.create-link {
+  text-decoration: none;
+}
+
+.room-partner {
   color: var(--text-muted);
   overflow-wrap: anywhere;
 }
