@@ -28,10 +28,10 @@ public class RoomService {
         this.codeGenerator = codeGenerator;
     }
 
-    public Room createRoom(Long creatorId, Set<Long> providerIds){
+    public Room createRoom(Long creatorId, String name, Set<Long> providerIds){
         User creator = findUser(creatorId);
         Set<Provider> providers = findProviders(providerIds);
-        Room room = new Room(generateUniqueCode(), creator);
+        Room room = new Room(name.strip(), generateUniqueCode(), creator);
         room.setProviders(providers);
         return roomRepository.save(room);
     }

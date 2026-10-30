@@ -75,7 +75,7 @@ class RoomProvidersApiTest {
         partner = userService.register("api-partner", "password123");
         stranger = userService.register("api-stranger", "password123");
 
-        Room room = roomService.createRoom(creator.getId(), Set.of(NETFLIX));
+        Room room = roomService.createRoom(creator.getId(), "Movie night", Set.of(NETFLIX));
         code = room.getInviteCode();
         roomService.joinRoom(code, partner.getId());
     }
@@ -102,31 +102,44 @@ class RoomProvidersApiTest {
     }
 
     @Test
-    void createRoom_savesChosenProviders() throws Exception {
-        mockMvc.perform(post("/api/rooms")
-                        .header(HttpHeaders.AUTHORIZATION, bearer(stranger))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body(NETFLIX, DISNEY)))
+    void createRoom_savesNameAndChosenProviders() throws Exception {
+        createRoom("  Friday films  ", NETFLIX, DISNEY)
                 .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("Friday films"))
                 .andExpect(jsonPath("$.providers[*].name", contains("Disney Plus", "Netflix")));
     }
 
     @Test
-    void createRoom_withoutProviders_isAllowed() throws Exception {
+    void createRoom_blankName_returns400() throws Exception {
+        createRoom("   ", NETFLIX)
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createRoom_nameTooLong_returns400() throws Exception {
+        createRoom("x".repeat(51), NETFLIX)
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createRoom_missingProviderList_returns400() throws Exception {
         mockMvc.perform(post("/api/rooms")
                         .header(HttpHeaders.AUTHORIZATION, bearer(stranger))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(body()))
+                        .content("{\"name\": \"Friday films\"}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createRoom_withoutProviders_isAllowed() throws Exception {
+        createRoom("Friday films")
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.providers", hasSize(0)));
     }
 
     @Test
     void createRoom_unknownProvider_returns404() throws Exception {
-        mockMvc.perform(post("/api/rooms")
-                        .header(HttpHeaders.AUTHORIZATION, bearer(stranger))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body(UNKNOWN_PROVIDER)))
+        createRoom("Friday films", UNKNOWN_PROVIDER)
                 .andExpect(status().isNotFound());
     }
 
@@ -139,7 +152,7 @@ class RoomProvidersApiTest {
 
     @Test
     void joinRoom_includesProviders() throws Exception {
-        Room room = roomService.createRoom(creator.getId(), Set.of(NETFLIX));
+        Room room = roomService.createRoom(creator.getId(), "Second room", Set.of(NETFLIX));
 
         mockMvc.perform(post("/api/rooms/{code}/join", room.getInviteCode())
                         .header(HttpHeaders.AUTHORIZATION, bearer(partner)))
@@ -217,6 +230,13 @@ class RoomProvidersApiTest {
     void updateProviders_missingList_returns400() throws Exception {
         updateProviders(creator, "{}")
                 .andExpect(status().isBadRequest());
+    }
+
+    private ResultActions createRoom(String name, Long... providerIds) throws Exception {
+        return mockMvc.perform(post("/api/rooms")
+                .header(HttpHeaders.AUTHORIZATION, bearer(stranger))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\": \"" + name + "\", \"providerIds\": " + java.util.Arrays.toString(providerIds) + "}"));
     }
 
     private ResultActions updateProviders(User user, String body) throws Exception {

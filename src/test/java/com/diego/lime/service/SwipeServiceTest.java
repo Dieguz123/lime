@@ -57,7 +57,7 @@ class SwipeServiceTest {
         diego = userService.register("Diego", "password123");
         anna = userService.register("Anna", "Anna");
 
-        Room room = roomService.createRoom(diego.getId(), Set.of());
+        Room room = roomService.createRoom(diego.getId(), "Movie night", Set.of());
         code = room.getInviteCode();
         roomService.joinRoom(code, anna.getId());
 
@@ -196,7 +196,7 @@ class SwipeServiceTest {
     @Test
     void getNextFilm_providersOfAnotherRoom_doNotApply() {
         Film onNetflix = saveFilm("Roma", 2L, netflix);
-        roomService.createRoom(anna.getId(), Set.of(disney.getId()));
+        roomService.createRoom(anna.getId(), "Other room", Set.of(disney.getId()));
         roomService.updateProviders(code, diego.getId(), Set.of(netflix.getId()));
 
         assertEquals(Optional.of(onNetflix.getId()), swipeService.getNextFilm(code, diego.getId()).map(Film::getId));

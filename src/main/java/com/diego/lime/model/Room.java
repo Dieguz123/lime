@@ -14,6 +14,9 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 50)
+    private String name;
+
     @Column(nullable = false, unique = true, length = 6)
     private String inviteCode;
 
@@ -35,7 +38,8 @@ public class Room {
 
     protected Room() {}
 
-    public Room(String inviteCode, User creator) {
+    public Room(String name, String inviteCode, User creator) {
+        this.name = name;
         this.inviteCode = inviteCode;
         this.creator = creator;
     }
@@ -61,6 +65,10 @@ public class Room {
 
     public Long getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getInviteCode() {

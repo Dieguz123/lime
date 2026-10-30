@@ -2,6 +2,7 @@ package com.diego.lime.controller;
 
 
 import com.diego.lime.config.CurrentUser;
+import com.diego.lime.dto.CreateRoomRequest;
 import com.diego.lime.dto.RoomProvidersRequest;
 import com.diego.lime.dto.RoomResponse;
 import com.diego.lime.model.Room;
@@ -26,8 +27,8 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<RoomResponse> createRoom(@Valid @RequestBody RoomProvidersRequest request, @AuthenticationPrincipal Jwt jwt) {
-        Room created = roomService.createRoom(CurrentUser.id(jwt), request.providerIds());
+    public ResponseEntity<RoomResponse> createRoom(@Valid @RequestBody CreateRoomRequest request, @AuthenticationPrincipal Jwt jwt) {
+        Room created = roomService.createRoom(CurrentUser.id(jwt), request.name(), request.providerIds());
         return ResponseEntity.status(HttpStatus.CREATED).body(RoomResponse.from(created));
     }
 
