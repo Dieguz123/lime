@@ -37,6 +37,10 @@
 
   <div class="block">
     <h3 class="block-title">New room</h3>
+    @if (providers().length) {
+      <p class="muted">Pick your streaming platforms, or none to see every film.</p>
+      <app-provider-picker [providers]="providers()" [(selected)]="selectedProviders" />
+    }
     <button class="btn btn-block" type="button" (click)="createRoom()">Create a room</button>
 
     <form class="join" (ngSubmit)="joinRoom()">

@@ -9,8 +9,16 @@ export class RoomService {
   private http = inject(HttpClient);
   private apiUrl = `${API_URL}/rooms`;
 
-  create(): Observable<Room> {
-    return this.http.post<Room>(this.apiUrl, {});
+  create(providerIds: number[]): Observable<Room> {
+    return this.http.post<Room>(this.apiUrl, {providerIds});
+  }
+
+  get(code: string): Observable<Room> {
+    return this.http.get<Room>(`${this.apiUrl}/${code}`);
+  }
+
+  updateProviders(code: string, providerIds: number[]): Observable<Room> {
+    return this.http.put<Room>(`${this.apiUrl}/${code}/providers`, {providerIds});
   }
 
   join(code: string): Observable<Room> {

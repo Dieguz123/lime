@@ -2,21 +2,27 @@ import {Component, inject, OnInit, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {Router, RouterLink} from '@angular/router';
 import {RoomService} from '../../services/room.service';
+import {ProviderService} from '../../services/provider.service';
 import {AuthService} from '../../services/auth.service';
 import {Room} from '../../models/room';
+import {Provider} from '../../models/provider';
+import {ProviderPicker} from '../../components/provider-picker/provider-picker';
 
 @Component({
   selector: 'app-home',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, ProviderPicker],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
 export class Home implements OnInit {
   auth = inject(AuthService);
   private roomService = inject(RoomService);
+  private providerService = inject(ProviderService);
   private router = inject(Router);
 
   rooms = signal<Room[]>([]);
+  providers = signal<Provider[]>([]);
+  selectedProviders = signal<number[]>([]);
   loading = signal(true);
   code = '';
   error = signal<string | null>(null);
@@ -30,6 +36,10 @@ export class Home implements OnInit {
         this.loading.set(false);
       }
     )
+    this.providerService.getAll().subscribe({
+      next: providers => this.providers.set(providers),
+      error: () => this.error.set('Could not load the streaming platforms')
+    });
   }
 
   otherMember(room: Room): string | null {
@@ -45,7 +55,7 @@ export class Home implements OnInit {
   }
 
   createRoom(): void {
-    this.roomService.create().subscribe({
+    this.roomService.create(this.selectedProviders()).subscribe({
       next: room => this.router.navigate(['/room', room.inviteCode]),
       error: () => this.error.set('Something went wrong, try again')
     });
