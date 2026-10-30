@@ -46,8 +46,8 @@
           @if (film.platform) {
             <p class="badge platform">{{ film.platform }}</p>
           }
-          @if (film.genre) {
-            <p class="badge">{{ film.genre }}</p>
+          @for (genre of film.genres; track genre.id) {
+            <p class = "badge"> {{ genre.name }}</p>
           }
         </div>
       </div>

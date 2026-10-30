@@ -3,7 +3,7 @@ export interface Film {
   name: string;
   releaseYear: number | null;
   platform: string | null;
-  genre: string | null;
+  genres: { id: number; name : string} [];
   tmdbId: number;
   overview: string | null;
   posterPath: string | null;

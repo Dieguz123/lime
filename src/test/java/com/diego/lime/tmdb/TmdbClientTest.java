@@ -47,7 +47,8 @@ class TmdbClientTest {
                       "overview": "Dom Cobb è un ladro specializzato nei sogni.",
                       "poster_path": "/inception.jpg",
                       "release_date": "2010-07-15",
-                      "vote_average": 8.4
+                      "vote_average": 8.4,
+                      "genre_ids": [878, 28]
                     }
                   ]
                 }
@@ -69,6 +70,7 @@ class TmdbClientTest {
         assertEquals("Dom Cobb è un ladro specializzato nei sogni.", movie.overview());
         assertEquals("/inception.jpg", movie.posterPath());
         assertEquals("2010-07-15", movie.releaseDate());
+        assertEquals(List.of(878L,28L), movie.genreIds());
     }
 
     @Test
@@ -78,5 +80,31 @@ class TmdbClientTest {
 
         assertThrows(HttpClientErrorException.Unauthorized.class,
                 () -> client.getPopularMovies(1));
+    }
+
+    @Test
+    void getGenres_parsesResponse() {
+        String json = """
+            {
+              "genres": [
+                { "id": 28, "name": "Azione" },
+                { "id": 878, "name": "Fantascienza" }
+              ]
+            }
+            """;
+
+        server.expect(requestTo("https://api.test/3/genre/movie/list?language=it-IT"))
+                .andExpect(method(HttpMethod.GET))
+                .andExpect(header(HttpHeaders.AUTHORIZATION, "Bearer test-token"))
+                .andRespond(withSuccess(json, MediaType.APPLICATION_JSON));
+
+        List<TmdbGenre> genres = client.getGenres();
+
+        server.verify();
+        assertEquals(2, genres.size());
+        assertEquals(28L, genres.get(0).id());
+        assertEquals("Azione", genres.get(0).name());
+        assertEquals(878L, genres.get(1).id());
+        assertEquals("Fantascienza", genres.get(1).name());
     }
 }

@@ -24,4 +24,6 @@ public interface FilmRepository extends JpaRepository<Film, Long> {
     List<Film> findNotSwipedByUserInRoom(@Param("room") Room room, @Param("user") User user);
 
     boolean existsByTmdbId(Long id);
+
+    Optional<Film> findByTmdbId(Long id);
 }
