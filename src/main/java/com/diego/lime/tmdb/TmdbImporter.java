@@ -1,6 +1,6 @@
 package com.diego.lime.tmdb;
 
-
+import com.diego.lime.events.EventPublisher;
 import com.diego.lime.events.FilmImportedEvent;
 import com.diego.lime.model.Film;
 import com.diego.lime.model.Genre;
@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import com.diego.lime.events.EventPublisher;
 
 
 @Component
