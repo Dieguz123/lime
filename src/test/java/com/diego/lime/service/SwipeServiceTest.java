@@ -1,5 +1,6 @@
 package com.diego.lime.service;
 
+import com.diego.lime.events.EventPublisher;
 import com.diego.lime.exception.ForbiddenException;
 import com.diego.lime.model.Film;
 import com.diego.lime.model.Provider;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -44,6 +46,9 @@ class SwipeServiceTest {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @MockitoBean
+    private EventPublisher eventPublisher;
 
     private User diego;
     private User anna;

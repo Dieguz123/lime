@@ -1,5 +1,7 @@
 package com.diego.lime.service;
 
+import com.diego.lime.events.EventPublisher;
+import com.diego.lime.events.SwipeRecordedEvent;
 import com.diego.lime.exception.ForbiddenException;
 import com.diego.lime.exception.NotFoundException;
 import com.diego.lime.model.Film;
@@ -12,6 +14,7 @@ import com.diego.lime.repository.SwipeRepository;
 import com.diego.lime.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,15 +25,18 @@ public class SwipeService {
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
     private final FilmRepository filmRepository;
+    private final EventPublisher eventPublisher;
 
     public SwipeService(SwipeRepository swipeRepository,
                         RoomRepository roomRepository,
                         UserRepository userRepository,
-                        FilmRepository filmRepository){
+                        FilmRepository filmRepository,
+                        EventPublisher eventPublisher){
         this.swipeRepository = swipeRepository;
         this.roomRepository = roomRepository;
         this.userRepository = userRepository;
         this.filmRepository = filmRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     public boolean swipe(String inviteCode, Long userId, Long filmId, boolean liked){
@@ -45,6 +51,7 @@ public class SwipeService {
 
 
         swipeRepository.save(new Swipe(room, user, film , liked));
+        eventPublisher.publishSwipeRecorded(new SwipeRecordedEvent(room.getId(), user.getId(), film.getId(), liked, Instant.now()));
 
         if (!liked || !room.isFull()){
             return false;
