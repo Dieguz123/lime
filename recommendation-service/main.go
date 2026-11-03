@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/twmb/franz-go/pkg/kgo"
 )
 
@@ -36,6 +37,7 @@ type SwipeRecorded struct {
 
 func main() {
 	brokers := getenv("KAFKA_BROKERS", "localhost:9092")
+	databaseURL := getenv("DATABASE_URL", "postgres://lime:lime@localhost:5432/recommendations")
 
 	client, err := kgo.NewClient(
 		kgo.SeedBrokers(brokers),
@@ -52,6 +54,18 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
+	pool, err := pgxpool.New(ctx, databaseURL)
+	if err != nil {
+		slog.Error("cannot create database connection pool", "err", err)
+		os.Exit(1)
+	}
+	defer pool.Close()
+
+	if err := pool.Ping(ctx); err != nil {
+		slog.Error("cannot ping database", "err", err)
+		os.Exit(1)
+	}
+	slog.Info("connected to database")
 	slog.Info("recommendation-service started", "brokers", brokers)
 
 	for {
