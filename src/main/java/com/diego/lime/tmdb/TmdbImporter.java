@@ -1,6 +1,7 @@
 package com.diego.lime.tmdb;
 
-
+import com.diego.lime.events.EventPublisher;
+import com.diego.lime.events.FilmImportedEvent;
 import com.diego.lime.model.Film;
 import com.diego.lime.model.Genre;
 import com.diego.lime.model.Provider;
@@ -26,20 +27,20 @@ import java.util.Set;
 @ConditionalOnProperty(name = "tmdb.import.enabled", havingValue = "true")
 public class TmdbImporter implements CommandLineRunner {
     private static final Logger log = LoggerFactory.getLogger(TmdbImporter.class);
-    //20 films per page. Each one costs an extra call for its providers and the import
-    //runs on every startup, so a page is 21 requests and 10 pages are about 210.
     private static final int PAGES = 10;
 
     private final TmdbClient tmdbClient;
     private final FilmRepository filmRepository;
     private final GenreRepository genreRepository;
     private final ProviderRepository providerRepository;
+    private final EventPublisher eventPublisher;
 
-    public TmdbImporter(TmdbClient tmdbClient, FilmRepository filmRepository, GenreRepository genreRepository, ProviderRepository providerRepository){
+    public TmdbImporter(TmdbClient tmdbClient, FilmRepository filmRepository, GenreRepository genreRepository, ProviderRepository providerRepository, EventPublisher eventPublisher){
         this.tmdbClient = tmdbClient;
         this.filmRepository = filmRepository;
         this.genreRepository = genreRepository;
         this.providerRepository = providerRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -67,6 +68,7 @@ public class TmdbImporter implements CommandLineRunner {
 
                     film.setProviders(fetchProviders(movie.id()));
                     filmRepository.save(film);
+                    eventPublisher.publishFilmImported(FilmImportedEvent.from(film));
                 }
             }
             log.info("Imported {} new films and refreshed {} existing films", saved, updated);
