@@ -77,6 +77,8 @@ func main() {
 	}
 	slog.Info("database schema ready")
 
+	store := NewStore(pool)
+
 	slog.Info("recommendation-service started", "brokers", brokers)
 
 	for {
@@ -90,11 +92,13 @@ func main() {
 			slog.Error("fetch error", "topic", topic, "partition", partition, "err", err)
 		})
 
-		fetches.EachRecord(handle)
+		fetches.EachRecord(func(record *kgo.Record) {
+			handle(record, store, ctx)
+		})
 	}
 }
 
-func handle(record *kgo.Record) {
+func handle(record *kgo.Record, store *Store, ctx context.Context) {
 	switch record.Topic {
 	case topicFilms:
 		var event FilmImported
@@ -104,6 +108,12 @@ func handle(record *kgo.Record) {
 		}
 		slog.Info("film imported", "filmId", event.FilmID, "title", event.Title, "genres", event.GenreIDs)
 
+		if err := store.UpsertFilm(ctx, &event); err != nil {
+			slog.Error("cannot upsert film", "err", err)
+			return
+		}
+		slog.Info("film upserted", "filmId", event.FilmID, "title", event.Title, "genres", event.GenreIDs)
+
 	case topicSwipes:
 		var event SwipeRecorded
 		if err := json.Unmarshal(record.Value, &event); err != nil {
@@ -111,6 +121,12 @@ func handle(record *kgo.Record) {
 			return
 		}
 		slog.Info("swipe recorded", "roomId", event.RoomID, "filmId", event.FilmID, "liked", event.Liked)
+
+		if err := store.UpsertSwipe(ctx, &event); err != nil {
+			slog.Error("cannot upsert swipe", "err", err)
+			return
+		}
+		slog.Info("swipe upserted", "roomId", event.RoomID, "filmId", event.FilmID, "liked", event.Liked)
 	}
 }
 

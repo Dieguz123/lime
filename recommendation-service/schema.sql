@@ -11,4 +11,3 @@ CREATE TABLE IF NOT EXISTS swipes (
     occurred_at TIMESTAMPTZ NOT NULL,
     CONSTRAINT pk_swipes PRIMARY KEY (room_id, film_id, user_id)
 );
-
