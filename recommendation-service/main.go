@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	_ "embed"
 	"encoding/json"
 	"log/slog"
 	"os"
@@ -12,6 +13,9 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/twmb/franz-go/pkg/kgo"
 )
+
+//go:embed schema.sql
+var schema string
 
 const (
 	topicFilms  = "lime.films"
@@ -66,6 +70,13 @@ func main() {
 		os.Exit(1)
 	}
 	slog.Info("connected to database")
+
+	if _, err := pool.Exec(ctx, schema); err != nil {
+		slog.Error("cannot execute schema", "err", err)
+		os.Exit(1)
+	}
+	slog.Info("database schema ready")
+
 	slog.Info("recommendation-service started", "brokers", brokers)
 
 	for {
